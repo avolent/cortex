@@ -1,15 +1,30 @@
 ---
-const { frontmatter } = Astro.props;
+const { frontmatter, url } = Astro.props;
 ---
 <html>
-  <head>
-    <title>{frontmatter.title}</title>
-  </head>
-  <body>
-    <!-- Add other UI components here, like common headers and footers. -->
-    <h1>{frontmatter.title} by {frontmatter.author}</h1>
-    <!-- 2. Rendered HTML will be passed into the default slot. -->
-    <slot />
-    <p>Written on: {frontmatter.date}</p>
-  </body>
+    <head>
+        <title>{frontmatter.title}</title>
+        <link rel="stylesheet" href="https://latex.now.sh/style.css">
+        <link rel="stylesheet" href="/styles.css">
+    </head>
+    <body class="libertinus">
+        <header>
+            <h1 id="home">{frontmatter.title}</h1>
+            <p class="author">
+                <a href="https://github.com/avolent">github.com/{frontmatter.author}</a><br>
+                Updated on: {frontmatter.date} <br>
+                {url}
+            </p>
+        </header>
+        <slot />
+        <div class="footnotes">
+            <p id="fn1">
+            CSS is from <a href="https://latex.vercel.app/">Latex.css</a>
+            </p>
+            <p id="fn2" style="text-align: right">
+            Return to top <a href="#home">↩</a>
+            </p>
+        </div>
+    </body>
+
 </html>
