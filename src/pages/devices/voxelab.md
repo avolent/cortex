@@ -34,12 +34,12 @@ Important Sticky Note to read before starting here [^1]
 Explanation here: https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explanation_on_aquila_chips_from_voxelab_team/
 - Simple method
 	Confirm whether you printer has a sticker on it with the model of chip.
-![chip.jpg](/images/devices/voxelab/chip.jpg){.align-center}
+![chip.jpg](/cortex/images/devices/voxelab/chip.jpg){.align-center}
 If your printer does not have a sticker, it is most likely the G32 or N32
 
 - Effort Required
 	Open the bottom of your printer and confirm by looking at the model number on the chip.
-	![chip_onboard.jpeg](/images/devices/voxelab/chip_onboard.jpeg){.align-center}
+	![chip_onboard.jpeg](/cortex/images/devices/voxelab/chip_onboard.jpeg){.align-center}
 
 #### Download custom firmware
 
@@ -67,7 +67,7 @@ Open up windows explorer and format your SD card with the following settings
 - Volume Name : Whatever you want!
 - Quick Format : Checked
 
-![Format Settings](/images/devices/voxelab/format_settings.png)
+![Format Settings](/cortex/images/devices/voxelab/format_settings.png)
 
 #### Preparing for Flashing
 - Extract the source code zip file.
@@ -76,7 +76,7 @@ Open up windows explorer and format your SD card with the following settings
 - Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.
 End result should look something like this
 
-![SD Folders](/images/devices/voxelab/sd_folders.png)
+![SD Folders](/cortex/images/devices/voxelab/sd_folders.png)
 
 #### Flashing the motherboard
 - Make sure printer is off.

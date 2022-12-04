@@ -8,7 +8,7 @@ date: 04/12/22
 <nav role="navigation">
     <h2>Contents</h2>
     <ol>
-        <li><a href="/devices/voxelab">devices</a></li>
+        <li><a href="/cortex/devices/voxelab">devices</a></li>
         <li><a href="#projects">Link</a></li>
         <ol>
         <li><a href="#p1">Link</a></li>
