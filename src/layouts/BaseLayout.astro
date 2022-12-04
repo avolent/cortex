@@ -9,8 +9,9 @@ const { frontmatter, url } = Astro.props;
     </head>
     <body class="libertinus">
         <header>
-            <h1 id="home">{frontmatter.title}</h1>
+            <h1 id="home">{frontmatter.title}</h1><br>
             <p class="author">
+                <a href="/cortex/">Cortex</a><br>
                 <a href="https://github.com/avolent">github.com/{frontmatter.author}</a><br>
                 Updated on: {frontmatter.date} <br>
                 {url}

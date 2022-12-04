@@ -8,7 +8,7 @@ date: 04/12/22
 <nav role="navigation">
     <h2>Contents</h2>
     <ol>
-        <li><a href="/cortex/devices/voxelab">devices</a></li>
+        <li><a href="/cortex/devices/voxelab">Devices</a></li>
         <li><a href="#projects">Link</a></li>
         <ol>
         <li><a href="#p1">Link</a></li>
@@ -30,6 +30,8 @@ Something a long the lines of the Feynman Technique - a mental model (a breakdow
 Brain dumps and a collection notes/resources from our personal projects.
 
 Notes may include information and tips from other peoples guides. This will be referenced when required.
+
+## Thanks
 
 </article>
 </main>
