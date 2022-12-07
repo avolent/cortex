@@ -14,7 +14,6 @@ const { frontmatter, url } = Astro.props;
             <h1 id="home">{frontmatter.title}</h1>
             <p class="author">
                 <a href="/cortex/">Home</a><br>
-                <a href="https://avolent.io/">avolent.io</a><br>
                 <a href="https://github.com/avolent">{frontmatter.author}</a><br>
                 Updated on: {frontmatter.date} <br>
                 {url}
@@ -27,7 +26,7 @@ const { frontmatter, url } = Astro.props;
         </main>
         <div class="footnotes">
             <p id="fn1">
-            CSS is from <a href="https://latex.vercel.app/">Latex.css</a>
+            CSS is from <a href="https://latex.vercel.app/">Latex.css</a> | Wiki built by <a href="https://avolent.io/">avolent.io</a>
             </p>
             <p id="fn2" style="text-align: right">
             Return to top <a href="#home">↩</a>
