@@ -15,7 +15,7 @@ const { frontmatter, url } = Astro.props;
             <p class="author">
                 <a href="/cortex/">Home</a><br>
                 <a href="https://avolent.io/">avolent.io</a><br>
-                <a href="https://github.com/avolent">github.com/{frontmatter.author}</a><br>
+                <a href="https://github.com/avolent">{frontmatter.author}</a><br>
                 Updated on: {frontmatter.date} <br>
                 {url}
             </p>
