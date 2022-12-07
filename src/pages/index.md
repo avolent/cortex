@@ -27,6 +27,5 @@ Notes may include information and tips from other peoples guides. This will be r
     1. [pfSense](/cortex/networking/pfsense)
 
 </nav>
-
 </article>
 </main>

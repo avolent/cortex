@@ -30,21 +30,20 @@ Important Sticky Note to read before starting [here](https://www.reddit.com/r/Vo
 
 **Determine which firmware your printer requires. (G32 or N32)**
 
-
 Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explanation_on_aquila_chips_from_voxelab_team/)
 - Simple method
 	Confirm whether you printer has a sticker on it with the model of chip.
-![chip.jpg](/cortex/images/devices/voxelab/chip.jpg){.align-center}
+![chip.jpg](/cortex/images/devices/voxelab/chip.jpg)
 If your printer does not have a sticker, it is most likely the G32 or N32
 
 - Effort Required
 	Open the bottom of your printer and confirm by looking at the model number on the chip.
-	![chip_onboard.jpeg](/cortex/images/devices/voxelab/chip_onboard.jpeg){.align-center}
+	![chip_onboard.jpeg](/cortex/images/devices/voxelab/chip_onboard.jpeg)
 
 **Download custom firmware**
 
 - Download the .bin file for your device version from [Custom Firmware](https://github.com/alexqzd/Marlin/releases)
-	##### Types of version
+	**Types of version**
 	- **<u>Bed Leveling Type</u>**
 	BLTouch: Auto Bed Leveling
 	Default: No Auto Bed Leveling
