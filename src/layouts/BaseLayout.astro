@@ -6,20 +6,24 @@ const { frontmatter, url } = Astro.props;
         <meta name="viewport" content="initial-scale=1, width=device-width">
         <title>{frontmatter.title}</title>
         <link rel="stylesheet" href="https://latex.now.sh/style.css">
-        <link rel="stylesheet" href="/styles.css">
+        <link rel="stylesheet" href="/style.css">
         <link href="/favicon.ico" rel="icon">
     </head>
     <body class="libertinus">
         <header>
             <h1 id="home">{frontmatter.title}</h1>
             <p class="author">
-                <a href="/cortex/">Cortex</a><br>
+                <a href="/cortex/">Home</a><br>
                 <a href="https://github.com/avolent">github.com/{frontmatter.author}</a><br>
                 Updated on: {frontmatter.date} <br>
                 {url}
             </p>
         </header>
-        <slot />
+        <main>
+            <article>
+                <slot />
+            </article>
+        </main>
         <div class="footnotes">
             <p id="fn1">
             CSS is from <a href="https://latex.vercel.app/">Latex.css</a>
@@ -28,6 +32,12 @@ const { frontmatter, url } = Astro.props;
             Return to top <a href="#home">↩</a>
             </p>
         </div>
+        <button id="dark-mode-toggle">Toggle dark mode</button>
+        <script type="text/javascript">
+            const darkModeToggle = document.getElementById('dark-mode-toggle')
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('latex-dark')
+            })
+        </script>
     </body>
-
 </html>

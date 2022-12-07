@@ -5,18 +5,15 @@ title: Voxelab
 date: 04/12/22
 ---
 
-<nav role="navigation">
-    <h2>Contents</h2>
-    <ol>
-        <li><a href="#prepartion">Preparation</a></li>
-		<ol>
-			<li><a href="#">Preparation</a></li>
-		</ol>
-        <li><a href="#references">References</a></li>
-    </ol>
+<!-- Table of Contents -->
+<nav role="navigation" class="toc">
+
+## Contents
+1. [Useful Links](#useful-links)
+1. [Updating your printer](#updating-your-printer)
+	1. [Preparation](#preparation)
+
 </nav>
-<main>
-<article>
 
 ## Useful Links
 - [Custom Firmware](https://github.com/alexqzd/Marlin/releases) - Video Tutorial [^3]
@@ -26,12 +23,12 @@ date: 04/12/22
 
 ### Preparation
 
-Important Sticky Note to read before starting here [^1]
+Important Sticky Note to read before starting [here](https://www.reddit.com/r/VoxelabAquila/comments/lvlzf2/sticky_post_with_links_to_important_posts/) [^1]
 
-#### Determine which firmware your printer requires. (G32 or N32)
+**Determine which firmware your printer requires. (G32 or N32)**
 
 
-Explanation here: https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explanation_on_aquila_chips_from_voxelab_team/
+Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explanation_on_aquila_chips_from_voxelab_team/)
 - Simple method
 	Confirm whether you printer has a sticker on it with the model of chip.
 ![chip.jpg](/cortex/images/devices/voxelab/chip.jpg){.align-center}
@@ -41,7 +38,7 @@ If your printer does not have a sticker, it is most likely the G32 or N32
 	Open the bottom of your printer and confirm by looking at the model number on the chip.
 	![chip_onboard.jpeg](/cortex/images/devices/voxelab/chip_onboard.jpeg){.align-center}
 
-#### Download custom firmware
+**Download custom firmware**
 
 - Download the .bin file for your device version from [Custom Firmware](https://github.com/alexqzd/Marlin/releases)
 	##### Types of version
@@ -59,7 +56,7 @@ If your printer does not have a sticker, it is most likely the G32 or N32
 
 - Also download the source code .zip file aswell.
 
-#### Format the SD card
+**Format the SD card**
 Open up windows explorer and format your SD card with the following settings
 - Capacity : Doesn't matter dependent on SD card size.
 - File System : FAT32
@@ -96,13 +93,9 @@ End result should look something like this
 
 #### Firmware Upgrade Complete!
 
-
 ## References
 
 [^1]: Reddit Sticky with important info: [here](https://www.reddit.com/r/VoxelabAquila/comments/lvlzf2/sticky_post_with_links_to_important_posts/)
 [^2]: Stock Upgrade Video by 3DprintSOS - [here](https://www.youtube.com/watch?v=6afQUIR6Dmo)
 [^3]: 3rd Party Upgrade Video by 3DprintSOS - [here](https://www.youtube.com/watch?v=sQFsnIyJ5BM)
-
-</article>
-</main>
 
