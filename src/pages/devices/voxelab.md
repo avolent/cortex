@@ -2,7 +2,7 @@
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Voxelab
-date: 04/12/22
+date: Dec 2022
 ---
 
 <!-- Table of Contents -->
@@ -12,6 +12,9 @@ date: 04/12/22
 1. [Useful Links](#useful-links)
 1. [Updating your printer](#updating-your-printer)
 	1. [Preparation](#preparation)
+	1. [Flashing the motherboard](#flashing-the-motherboard)
+	1. [Flashing the display](#flashing-the-display)
+1. [References](#references)
 
 </nav>
 
@@ -66,7 +69,7 @@ Open up windows explorer and format your SD card with the following settings
 
 ![Format Settings](/cortex/images/devices/voxelab/format_settings.png)
 
-#### Preparing for Flashing
+**Preparing for Flashing**
 - Extract the source code zip file.
 - Go into the path "/Display Firmware/Firmware Sets". The folder set you can now see are basically the theme for the display. Pick one you like, copy it to your desktop and then rename it to just "DWIN_SET" (All capitals).
 - Now for the .bin file you downloaded earlier, Make a new folder and name it "firmware" (All lowercase) and move it inside.
@@ -75,14 +78,14 @@ End result should look something like this
 
 ![SD Folders](/cortex/images/devices/voxelab/sd_folders.png)
 
-#### Flashing the motherboard
+### Flashing the motherboard
 - Make sure printer is off.
 - Place SD card into Machine
 - Turn on the printer
 - Watch the screen and look for a loading bar. It will give you a check mark once complete.
 *The screen will look really messy after flashing the mobo, this is normal as we havent flashed the display yet.*
 
-#### Flashing the display
+### Flashing the display
 - Make sure the printer is off.
 - Remove the screen and the screws from the back.
 - Open up the screen and remove the ribbon cable.
@@ -91,7 +94,7 @@ End result should look something like this
 - Turn the printer back on and wait for the screen to flash blue and then orange.
 - Once showing orange we can put everything back to normal and we now have the new firmware.
 
-#### Firmware Upgrade Complete!
+**Firmware Upgrade Complete!**
 
 ## References
 
