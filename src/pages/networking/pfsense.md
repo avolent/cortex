@@ -18,8 +18,7 @@ date: Dec 2022
 </nav>
 
 ## Useful Links
-- [pfsense](https://192.168.1.1/)
-- [pfsense Setup Video](https://www.youtube.com/watch?v=fsdm5uc_LsU&t=662s&ab_channel=LawrenceSystems)
+- [pfsense Web Page](https://192.168.1.1/)
 - [Buffer Bloat Setup Video](https://www.youtube.com/watch?v=iXqExAALzR8&ab_channel=LawrenceSystems)
 - [Pfsense pfblockerng Setup](https://www.youtube.com/watch?v=xizAeAqYde4&ab_channel=LawrenceSystems)
 - [Wireguard Setup](https://www.youtube.com/watch?v=8jQ5UE_7xds&ab_channel=LawrenceSystems)
@@ -29,6 +28,8 @@ date: Dec 2022
 **Password:** pfsense
 
 ## Initial Setup
+Useful video for setup of pfsense and basic settings. [^3]  
+
 ### 1. [/System/Advanced/Admin Access](https://192.168.1.1/system_advanced_admin.php)
 Enable **Display page name first in browser tab**.  
 Enable **Secure Shell** if required.  
@@ -67,13 +68,13 @@ Enable **DNSSEC** Support.
 Enable **Python Module** (Leave the settings default) *If you want regex blocking*.  
 ### 9. [/Services/Dynamic DNS/Dynamic DNS Clients](https://192.168.1.1/services_dyndns.php)
 Create a Cloudflare ddns client.  
-### 10. [/Firewall/pfBlockerNG](https://192.168.1.1/pfblockerng/pfblockerng_general.php)
+### 10. [/Firewall/pfBlockerNG](https://192.168.1.1/pfblockerng/pfblockerng_general.php) [^4]
 **CRON Settings** = Once a day.  
 ### 11. [/Firewall/pfBlockerNG/IP](https://192.168.1.1/pfblockerng/pfblockerng_ip.php) - Make sure you force reload at the end to save changes.
 Enable **Floating Rules**.  
 Enable **Kill States**.  
 Add **MaxMind License Key**.  
-### 12. [/Firewall/pfBlockerNG/DNSBL](https://192.168.1.1/pfblockerng/pfblockerng_dnsbl.php)
+### 12. [/Firewall/pfBlockerNG/DNSBL](https://192.168.1.1/pfblockerng/pfblockerng_dnsbl.php) 
 **DNSBL Mode** = Unbound Python Mode *If you want regex blocking*.  
 **Regex Blocking** = Enable.  
 **DNSBL IPs - List Action** = Deny Both.  
@@ -100,7 +101,7 @@ Firebog_Advertising
 
 ## UPNP
 Configuring the following is great for devices which have strict NAT type when playing games.  
-Device used in this example is a **Nintendo Switch**.  
+Device used in this example is a **Nintendo Switch** [^1].  
 
 ### 1. [/Services/DHCP Server/LAN](https://192.168.1.1/services_dhcp.php)
 
@@ -154,15 +155,15 @@ Save the rule.
 > These ports should now be open to internet. BE CAREFUL and open only what is needed. Block unecessary global subnets etc via PFBlockerNG.  
 
 ## Buffer Bloat
-
+[^2]
 ## Wireguard
-
+[^5]
 ## VLANs
 
 # References
-[^1]: UPNP - https://www.amixa.com/blog/2020/04/02/how-to-get-open-nat-with-xbox-or-xbox-one-and-pfsense-firewall/
-[^2] - https://www.youtube.com/watch?v=iXqExAALzR8&ab_channel=LawrenceSystems
-[^3] - https://www.youtube.com/watch?v=fsdm5uc_LsU&t=662s
-[^4] - https://www.youtube.com/watch?v=xizAeAqYde4&ab_channel=LawrenceSystems
-[^5] - https://www.youtube.com/watch?v=CXFbEbzFEXw&feature=emb_title&ab_channel=LawrenceSystems
-[^6]: Firewall Table limit Issue - https://forum.netgate.com/topic/129127/ruleerror-there-were-errors-loading-the-rules-tmp-rules-debug-18-cannot-alloc/25
+[^1]: [How to get open NAT](https://www.amixa.com/blog/2020/04/02/how-to-get-open-nat-with-xbox-or-xbox-one-and-pfsense-firewall/)
+[^2]: [Buffer Bloat by Lawrence Systems](https://www.youtube.com/watch?v=iXqExAALzR8&ab_channel=LawrenceSystems)
+[^3]: [2020 Pfsense Setup by Lawrence Systems](https://www.youtube.com/watch?v=fsdm5uc_LsU&t=662s)
+[^4]: [pfblockerng Setup by Lawrence Systems](https://www.youtube.com/watch?v=xizAeAqYde4&ab_channel=LawrenceSystems)
+[^5]: [Wireguard Setup by Lawrence Systems](https://www.youtube.com/watch?v=CXFbEbzFEXw&feature=emb_title&ab_channel=LawrenceSystems)
+[^6]: [Firewall Table limit Issue](https://forum.netgate.com/topic/129127/ruleerror-there-were-errors-loading-the-rules-tmp-rules-debug-18-cannot-alloc/25)
