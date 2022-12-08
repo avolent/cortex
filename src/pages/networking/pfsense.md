@@ -161,8 +161,8 @@ Save the rule.
 
 # References
 [^1]: UPNP - https://www.amixa.com/blog/2020/04/02/how-to-get-open-nat-with-xbox-or-xbox-one-and-pfsense-firewall/
-2 - https://www.youtube.com/watch?v=iXqExAALzR8&ab_channel=LawrenceSystems
-3 - https://www.youtube.com/watch?v=fsdm5uc_LsU&t=662s
-4 - https://www.youtube.com/watch?v=xizAeAqYde4&ab_channel=LawrenceSystems
-5 - https://www.youtube.com/watch?v=CXFbEbzFEXw&feature=emb_title&ab_channel=LawrenceSystems
+[^2] - https://www.youtube.com/watch?v=iXqExAALzR8&ab_channel=LawrenceSystems
+[^3] - https://www.youtube.com/watch?v=fsdm5uc_LsU&t=662s
+[^4] - https://www.youtube.com/watch?v=xizAeAqYde4&ab_channel=LawrenceSystems
+[^5] - https://www.youtube.com/watch?v=CXFbEbzFEXw&feature=emb_title&ab_channel=LawrenceSystems
 [^6]: Firewall Table limit Issue - https://forum.netgate.com/topic/129127/ruleerror-there-were-errors-loading-the-rules-tmp-rules-debug-18-cannot-alloc/25
