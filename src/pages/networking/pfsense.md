@@ -10,67 +10,70 @@ date: Dec 2022
 
 ## Contents
 1. [Useful Links](#useful-links)
+1. [Initial Setup](#initial-setup)
+1. [UPNP](#upnp)
+1. [Port Forwarding](#port-forwarding)
 1. [References](#references)
 
 </nav>
 
-# Useful Links
+## Useful Links
 - [pfsense](https://192.168.1.1/)
 - [pfsense Setup Video](https://www.youtube.com/watch?v=fsdm5uc_LsU&t=662s&ab_channel=LawrenceSystems)
 - [Buffer Bloat Setup Video](https://www.youtube.com/watch?v=iXqExAALzR8&ab_channel=LawrenceSystems)
 - [Pfsense pfblockerng Setup](https://www.youtube.com/watch?v=xizAeAqYde4&ab_channel=LawrenceSystems)
 - [Wireguard Setup](https://www.youtube.com/watch?v=8jQ5UE_7xds&ab_channel=LawrenceSystems)
-# Content
+
 ## Default pfsense Login
 **Username:** admin
 **Password:** pfsense
 
 ## Initial Setup
-#### 1. [/System/Advanced/Admin Access](https://192.168.1.1/system_advanced_admin.php)
+### 1. [/System/Advanced/Admin Access](https://192.168.1.1/system_advanced_admin.php)
 Enable **Display page name first in browser tab**
 Enable **Secure Shell** if required. 
-#### 2. [/Advanced/Firewall & NAT](https://192.168.1.1/system_advanced_admin.php)
+### 2. [/Advanced/Firewall & NAT](https://192.168.1.1/system_advanced_admin.php)
 Update **Firewall Maximum Table Entries** to 10,000,000
 Enable **IP Random id generation**
-#### 3. [/Advanced/Misc](https://192.168.1.1/system_advanced_misc.php)
+### 3. [/Advanced/Misc](https://192.168.1.1/system_advanced_misc.php)
 Enable **PowerD**
 Enable **Cryptographic Hardware**
 Enable **Thermal Sensors**
 Enable **Do NOT send Netgate Device ID with user agent**
-#### 4. [/System/General Setup](https://192.168.1.1/system.php)
+### 4. [/System/General Setup](https://192.168.1.1/system.php)
 **Theme** = pfsense Dark
 **Top Navigation** = Fixed
 **Dashboard Columns** = 3
-#### 5. [/System/Package Manager/Available Packages](https://192.168.1.1/pkg_mgr.php)
+### 5. [/System/Package Manager/Available Packages](https://192.168.1.1/pkg_mgr.php)
 ```
 darkstat (Optional)
 iperf (Optional)
 nmap (Optional)
 pfblockerng-devel (Important)
 ```
-#### 6. [/System/User Manager/Users](https://192.168.1.1/system_usermanager.php)
+### 6. [/System/User Manager/Users](https://192.168.1.1/system_usermanager.php)
 Add a new local user and attach them to the administrator group.
 Log out and log into the new user.
-#### 8. [/Interfaces/WAN](https://192.168.1.1/interfaces.php?if=wan)
+### 8. [/Interfaces/WAN](https://192.168.1.1/interfaces.php?if=wan)
 Changing port assignments can be done in [/Interfaces/Assignments](https://192.168.1.1/interfaces_assign.php)
 Most things are fine as default in here.
 If you need/want IPV6 change **DHCPv6 Prefix Delegation size** to the size your internet provider has given you.
 
-#### 7. [/Services/DHCP Server/LAN](https://192.168.1.1/services_dhcp.php)
+### 7. [/Services/DHCP Server/LAN](https://192.168.1.1/services_dhcp.php)
 Enable **Change DHCP display lease time from UTC to local time** (Do the same for IPv6)
 Assign your **Static IP** addresses
-#### 8. [/Services/DNS Resolver/General Settings](https://192.168.1.1/services_unbound.php)
+### 8. [/Services/DNS Resolver/General Settings](https://192.168.1.1/services_unbound.php)
 Enable **DNSSEC** Support
 Enable **Python Module** (Leave the settings default) *If you want regex blocking*
-#### 9. [/Services/Dynamic DNS/Dynamic DNS Clients](https://192.168.1.1/services_dyndns.php)
+### 9. [/Services/Dynamic DNS/Dynamic DNS Clients](https://192.168.1.1/services_dyndns.php)
 Create a Cloudflare ddns client.
-#### 10. [/Firewall/pfBlockerNG](https://192.168.1.1/pfblockerng/pfblockerng_general.php)
+### 10. [/Firewall/pfBlockerNG](https://192.168.1.1/pfblockerng/pfblockerng_general.php)
 **CRON Settings** = Once a day
-#### 11. [/Firewall/pfBlockerNG/IP](https://192.168.1.1/pfblockerng/pfblockerng_ip.php) - Make sure you force reload at the end to save changes.
+### 11. [/Firewall/pfBlockerNG/IP](https://192.168.1.1/pfblockerng/pfblockerng_ip.php) - Make sure you force reload at the end to save changes.
 Enable **Floating Rules**
 Enable **Kill States**
 Add **MaxMind License Key**
-#### 12. [/Firewall/pfBlockerNG/DNSBL](https://192.168.1.1/pfblockerng/pfblockerng_dnsbl.php)
+### 12. [/Firewall/pfBlockerNG/DNSBL](https://192.168.1.1/pfblockerng/pfblockerng_dnsbl.php)
 **DNSBL Mode** = Unbound Python Mode *If you want regex blocking.*
 **Regex Blocking** = Enable
 **DNSBL IPs - List Action** = Deny Both
@@ -81,7 +84,7 @@ MAKE SURE YOU **UPDATE/RELOAD ALL** TO MAKE SURE CHANGES ARE ACTIVE!!
 
 If you get an error about running out of memory, this could be related to your firewall maximum table entry size. Since pfblockerNG is using a lot of rules you may need to increase even more as seen in a previous step. [^6]
 
-##### PFBlockerNG Feeds
+### PFBlockerNG Feeds
 
 The following feeds are what I currently use!
 
@@ -96,15 +99,15 @@ Cryptojackers
 Firebog_Advertising
 ```
 
-## UPNP [^1]
+## UPNP
 Configuring the following is great for devices which have strict NAT type when playing games.
 Device used in this example is a **Nintendo Switch**.
 
-#### 1. [/Services/DHCP Server/LAN](https://192.168.1.1/services_dhcp.php)
+### 1. [/Services/DHCP Server/LAN](https://192.168.1.1/services_dhcp.php)
 
 Assign device a static IP.
 
-#### 2. [/Services/UPnP & NAT-PMP](https://192.168.1.1/pkg_edit.php?xml=miniupnpd.xml&id=0)
+### 2. [/Services/UPnP & NAT-PMP](https://192.168.1.1/pkg_edit.php?xml=miniupnpd.xml&id=0)
 
 Enable the following:
 **UPnP & NAT-PMP**
@@ -116,7 +119,7 @@ Enable the following:
 Within **ACL Entries** add the device configured with the static IP like so.
 `allow 53-65535 192.168.1.246/32 53-65535`
 
-#### 3. [/Firewall/NAT/Outbound](https://192.168.1.1/firewall_nat_out.php)
+### 3. [/Firewall/NAT/Outbound](https://192.168.1.1/firewall_nat_out.php)
 
 Configure your Outbound NAT mode to **Hybrid**
 Add the following rule.
@@ -135,7 +138,7 @@ Your device should now have a better NAT Type when playing games.
 ## Port Forwarding
 Port forward so that you can host games on your internal network and share with your friends externally.
 
-#### 1. [/Firewall/NAT/Port Forward](https://192.168.1.1/firewall_nat.php)
+### 1. [/Firewall/NAT/Port Forward](https://192.168.1.1/firewall_nat.php)
 Add a rule for a port you would like to forward.
 **Interface:** WAN
 **Address Family:** IPv4 (Unless you need IPv6)
