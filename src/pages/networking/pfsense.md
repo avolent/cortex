@@ -30,7 +30,7 @@ date: Dec 2022
 
 ## Initial Setup
 ### 1. [/System/Advanced/Admin Access](https://192.168.1.1/system_advanced_admin.php)
-Enable **Display page name first in browser tab**. 
+Enable **Display page name first in browser tab**.  
 Enable **Secure Shell** if required.  
 ### 2. [/Advanced/Firewall & NAT](https://192.168.1.1/system_advanced_admin.php)
 Update **Firewall Maximum Table Entries** to 10,000,000.  
