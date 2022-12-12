@@ -41,7 +41,7 @@ Copy the contents of your key and add to your github account under - [New SSH Ke
 cat ~/.ssh/key_name.pub
 ```
 
-![add_ssh_key.png](add_ssh_key.png)
+![add_ssh_key.png](/cortex/images/tools/add_ssh_key.png)
 ## Commands [^1]
 ### Setup
 `git config --global user.name “name”` - Set the name that will be used in commits, Normally your username.
