@@ -24,16 +24,16 @@ date: Dec 2022
 **Generate a SSH Key[^2] or use a pre-existing one [^3]** 
 In the terminal use the following command to generate a key.
 ```shell
-$ ssh-keygen -t ed25519 -C "your_email@example.com"
+ssh-keygen -t ed25519 -C "your_email@example.com"
 ```
 **Start the ssh-agent in the background.**
 ```shell
-$ eval "$(ssh-agent -s)"
+eval "$(ssh-agent -s)"
 > Agent pid 59566
 ```
 **Add your SSH private key to the ssh-agent.**
 ```shell
-$ ssh-add ~/.ssh/key_name
+ssh-add ~/.ssh/key_name
 ```
 **Now add the key to your github account**
 Copy the contents of your key and add to your github account under - [New SSH Key](https://github.com/settings/ssh/new)
@@ -44,24 +44,23 @@ cat ~/.ssh/key_name.pub
 ![add_ssh_key.png](/cortex/images/tools/add_ssh_key.png)
 ## Commands [^1]
 ### Setup
-`git config --global user.name “name”` - Set the name that will be used in commits, Normally your username.
-`git config --global user.email “[valid-email]”` - Set a email that will be used in commits.
-`git config --global color.ui auto` - Add colouring to git commands.
+`git config --global user.name “name”` - Set the name that will be used in commits, Normally your username.  
+`git config --global user.email “[valid-email]”` - Set a email that will be used in commits.  
+`git config --global color.ui auto` - Add colouring to git commands.  
 
 ### Setup & Init
-`git init` - Initialise an existing directory as a Git repository
-`git clone [url]` - Retreive entire repository from a hosted location via URL
+`git init` - Initialise an existing directory as a Git repository.  
+`git clone [url]` - Retreive entire repository from a hosted location via URL.  
 
 ### Stage & Snapshot
-`git status` - Show modified files in working directory, staged for your next commit.
-`git add [file]` - Add a file as it looks not to your next commit (Stage).
-`git reset [file]` - Unstage a file while retaining the changes in working directory.
-`git diff` - diff of what is changed but not staged.
-`git diff --staged` - Diff of what is staged but not yet commited.
-`git commit -m "[descriptive message]"` - Commit your staged content as a new commit snapshot.
+`git status` - Show modified files in working directory, staged for your next commit.  
+`git add [file]` - Add a file as it looks not to your next commit (Stage).  
+`git reset [file]` - Unstage a file while retaining the changes in working directory.  
+`git diff` - diff of what is changed but not staged.  
+`git diff --staged` - Diff of what is staged but not yet commited.  
+`git commit -m "[descriptive message]"` - Commit your staged content as a new commit snapshot.  
 
 ### Branch & Merge
-
 
 ### Inspect & Compare
 
@@ -74,7 +73,6 @@ cat ~/.ssh/key_name.pub
 ### Rewrite History
 
 ### Temporary Commits
-
 
 ## References
 [^1]: [GitHub Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)
