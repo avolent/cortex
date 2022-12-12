@@ -97,7 +97,7 @@ End result should look something like this
 
 ## References
 
-[^1]: Reddit Sticky with important info: [here](https://www.reddit.com/r/VoxelabAquila/comments/lvlzf2/sticky_post_with_links_to_important_posts/)
-[^2]: Stock Upgrade Video by 3DprintSOS - [here](https://www.youtube.com/watch?v=6afQUIR6Dmo)
-[^3]: 3rd Party Upgrade Video by 3DprintSOS - [here](https://www.youtube.com/watch?v=sQFsnIyJ5BM)
+[^1]: [Reddit Sticky with important info](https://www.reddit.com/r/VoxelabAquila/comments/lvlzf2/sticky_post_with_links_to_important_posts/)
+[^2]: [Stock Upgrade Video by 3DprintSOS](https://www.youtube.com/watch?v=6afQUIR6Dmo)
+[^3]: [3rd Party Upgrade Video by 3DprintSOS](https://www.youtube.com/watch?v=sQFsnIyJ5BM)
 
