@@ -47,5 +47,12 @@ const { frontmatter, url } = Astro.props;
                 }
             })
         </script>
+        <script type="text/javascript">
+            const contents = document.getElementById('contents');
+            const list = contents.nextElementSibling;
+            contents.insertAdjacentHTML('beforebegin', '<nav id="nav" role="navigation" class="toc"></nav>');
+            document.getElementById('nav').appendChild(contents)
+            document.getElementById('nav').appendChild(list)
+        </script>
     </body>
 </html>

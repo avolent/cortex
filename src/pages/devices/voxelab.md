@@ -5,9 +5,6 @@ title: Voxelab
 date: Dec 2022
 ---
 
-<!-- Table of Contents -->
-<nav role="navigation" class="toc">
-
 ## Contents
 1. [Useful Links](#useful-links)
 1. [Updating your printer](#updating-your-printer)
@@ -15,8 +12,6 @@ date: Dec 2022
 	1. [Flashing the motherboard](#flashing-the-motherboard)
 	1. [Flashing the display](#flashing-the-display)
 1. [References](#references)
-
-</nav>
 
 ## Useful Links
 - [Custom Firmware](https://github.com/alexqzd/Marlin/releases) - Video Tutorial [^3]

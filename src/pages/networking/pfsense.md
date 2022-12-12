@@ -5,9 +5,6 @@ title: pfSense
 date: Dec 2022
 ---
 
-<!-- Table of Contents -->
-<nav role="navigation" class="toc">
-
 ## Contents
 1. [Useful Links](#useful-links)
 1. [Initial Setup](#initial-setup)
@@ -15,7 +12,6 @@ date: Dec 2022
 1. [Port Forwarding](#port-forwarding)
 1. [References](#references)
 
-</nav>
 
 ## Useful Links
 - [pfsense Web Page](https://192.168.1.1/)

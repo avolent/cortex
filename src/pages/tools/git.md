@@ -5,16 +5,11 @@ title: git
 date: Dec 2022
 ---
 
-<!-- Table of Contents -->
-<nav role="navigation" class="toc">
-
 ## Contents
 1. [Useful Links](#useful-links)
 1. [Setting up github SSH Keys](#setting-up-github-ssh-keys)
 1. [Commands](#commands)
 1. [References](#references)
-
-</nav>
 
 ## Useful Links
 - [Git Docs](https://git-scm.com/docs)
