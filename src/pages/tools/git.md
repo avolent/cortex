@@ -11,6 +11,7 @@ date: Dec 2022
 ## Contents
 1. [Useful Links](#useful-links)
 1. [Setting up github SSH Keys](#setting-up-github-ssh-keys)
+1. [Commands](#commands)
 1. [References](#references)
 
 </nav>
@@ -42,23 +43,30 @@ cat ~/.ssh/key_name.pub
 ```
 
 ![add_ssh_key.png](/cortex/images/tools/git/add_ssh_key.png)
-## Commands [^1]
+## Commands
+Official cheat sheet [^1]
+
 ### Setup
-`git config --global user.name “name”` - Set the name that will be used in commits, Normally your username.  
-`git config --global user.email “[valid-email]”` - Set a email that will be used in commits.  
-`git config --global color.ui auto` - Add colouring to git commands.  
+```bash
+git config --global user.name “name” #Set the name that will be used in commits, Normally your username.  
+git config --global user.email “[valid-email]” #Set a email that will be used in commits.  
+git config --global color.ui auto #Add colouring to git commands.
+```
 
 ### Setup & Init
-`git init` - Initialise an existing directory as a Git repository.  
-`git clone [url]` - Retreive entire repository from a hosted location via URL.  
-
+```bash
+git init #Initialise an existing directory as a Git repository.  
+git clone [url] #Retreive entire repository from a hosted location via URL.  
+```
 ### Stage & Snapshot
-`git status` - Show modified files in working directory, staged for your next commit.  
-`git add [file]` - Add a file as it looks not to your next commit (Stage).  
-`git reset [file]` - Unstage a file while retaining the changes in working directory.  
-`git diff` - diff of what is changed but not staged.  
-`git diff --staged` - Diff of what is staged but not yet commited.  
-`git commit -m "[descriptive message]"` - Commit your staged content as a new commit snapshot.  
+```bash
+git status #Show modified files in working directory, staged for your next commit.  
+git add [file] #Add a file as it looks not to your next commit (Stage).  
+git reset [file] #Unstage a file while retaining the changes in working directory.  
+git diff #Diff of what is changed but not staged.  
+git diff --staged #Diff of what is staged but not yet commited.  
+git commit -m "[descriptive message]" #Commit your staged content as a new commit snapshot. 
+``` 
 
 ### Branch & Merge
 
