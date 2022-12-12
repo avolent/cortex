@@ -25,6 +25,8 @@ Notes may include information and tips from other peoples guides. This will be r
     1. [Voxelab](/cortex/devices/voxelab)
 1. Networking
     1. [pfSense](/cortex/networking/pfsense)
+1. Tools
+    1. [Git](/cortex/tools/git)
 
 </nav>
 </article>
