@@ -35,8 +35,16 @@ const { frontmatter, url } = Astro.props;
         </div>
         <script type="text/javascript">
             const darkModeToggle = document.getElementById('dark-mode-toggle')
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.toggle('latex-dark')
+            }
             darkModeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('latex-dark')
+                if (localStorage.getItem('darkMode') === 'true') {
+                    localStorage.setItem('darkMode','false');
+                } else {
+                    localStorage.setItem('darkMode','true');
+                }
             })
         </script>
     </body>
