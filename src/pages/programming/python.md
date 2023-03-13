@@ -1,7 +1,7 @@
 ---
 layout: /src/layouts/BaseLayout.astro
-author: 
-title: 
+author: avolent
+title: Python
 date: Mar 2023
 ---
 
@@ -12,8 +12,14 @@ date: Mar 2023
 
 ## Useful Links
 
-## Content
+## Pyenv
 
-# References
+### Installation
+
+## Pipenv
+
+### Installation
+
+## References
 
 [^1]: [Example](https://example.com)

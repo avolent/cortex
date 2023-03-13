@@ -191,7 +191,7 @@ Save the rule.
 
 ## VLANs
 
-# References
+## References
 [^1]: [How to get open NAT](https://www.amixa.com/blog/2020/04/02/how-to-get-open-nat-with-xbox-or-xbox-one-and-pfsense-firewall/)
 [^2]: [Buffer Bloat by Lawrence Systems](https://www.youtube.com/watch?v=iXqExAALzR8&ab_channel=LawrenceSystems)
 [^3]: [2020 Pfsense Setup by Lawrence Systems](https://www.youtube.com/watch?v=fsdm5uc_LsU&t=662s)

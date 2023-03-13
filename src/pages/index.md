@@ -21,4 +21,6 @@ Notes may include information and tips from other peoples guides. This will be r
     1. [pfSense](/cortex/networking/pfsense)
 1. Tools
     1. [Git](/cortex/tools/git)
+1. Programming
+    1. [Python](/cortex/tools/git)
 

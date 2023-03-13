@@ -13,6 +13,6 @@ date: month year
 
 ## Content
 
-# References
+## References
 [^1]: [Example](https://example.com)
 
