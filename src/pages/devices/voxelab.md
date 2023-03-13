@@ -6,6 +6,7 @@ date: Dec 2022
 ---
 
 ## Contents
+
 1. [Useful Links](#useful-links)
 1. [Updating your printer](#updating-your-printer)
 	1. [Preparation](#preparation)
@@ -14,6 +15,7 @@ date: Dec 2022
 1. [References](#references)
 
 ## Useful Links
+
 - [Custom Firmware](https://github.com/alexqzd/Marlin/releases) - Video Tutorial [^3]
 - [Stock Firmware](https://www.voxelab3dp.com/download) - Video Tutorial [^2]
 
@@ -23,9 +25,10 @@ date: Dec 2022
 
 Important Sticky Note to read before starting [here](https://www.reddit.com/r/VoxelabAquila/comments/lvlzf2/sticky_post_with_links_to_important_posts/) [^1]
 
-**Determine which firmware your printer requires. (G32 or N32)**
+#### Determine which firmware your printer requires. (G32 or N32)
 
 Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explanation_on_aquila_chips_from_voxelab_team/)
+
 - Simple method
 	Confirm whether you printer has a sticker on it with the model of chip.
 ![chip.jpg](/cortex/images/devices/voxelab/chip.jpg)
@@ -35,10 +38,11 @@ If your printer does not have a sticker, it is most likely the G32 or N32
 	Open the bottom of your printer and confirm by looking at the model number on the chip.
 	![chip_onboard.jpeg](/cortex/images/devices/voxelab/chip_onboard.jpeg)
 
-**Download custom firmware**
+#### Download custom firmware
 
 - Download the .bin file for your device version from [Custom Firmware](https://github.com/alexqzd/Marlin/releases)
-	**Types of version**
+
+**Types of version**
 	- **<u>Bed Leveling Type</u>**
 	BLTouch: Auto Bed Leveling
 	Default: No Auto Bed Leveling
@@ -53,8 +57,10 @@ If your printer does not have a sticker, it is most likely the G32 or N32
 
 - Also download the source code .zip file aswell.
 
-**Format the SD card**
+#### Format the SD card
+
 Open up windows explorer and format your SD card with the following settings
+
 - Capacity : Doesn't matter dependent on SD card size.
 - File System : FAT32
 - Allocation Unit Size : 4096 Bytes
@@ -63,7 +69,8 @@ Open up windows explorer and format your SD card with the following settings
 
 ![Format Settings](/cortex/images/devices/voxelab/format_settings.png)
 
-**Preparing for Flashing**
+#### Preparing for Flashing
+
 - Extract the source code zip file.
 - Go into the path "/Display Firmware/Firmware Sets". The folder set you can now see are basically the theme for the display. Pick one you like, copy it to your desktop and then rename it to just "DWIN_SET" (All capitals).
 - Now for the .bin file you downloaded earlier, Make a new folder and name it "firmware" (All lowercase) and move it inside.
@@ -73,6 +80,7 @@ End result should look something like this
 ![SD Folders](/cortex/images/devices/voxelab/sd_folders.png)
 
 ### Flashing the motherboard
+
 - Make sure printer is off.
 - Place SD card into Machine
 - Turn on the printer
@@ -80,6 +88,7 @@ End result should look something like this
 *The screen will look really messy after flashing the mobo, this is normal as we havent flashed the display yet.*
 
 ### Flashing the display
+
 - Make sure the printer is off.
 - Remove the screen and the screws from the back.
 - Open up the screen and remove the ribbon cable.
@@ -95,4 +104,3 @@ End result should look something like this
 [^1]: [Reddit Sticky with important info](https://www.reddit.com/r/VoxelabAquila/comments/lvlzf2/sticky_post_with_links_to_important_posts/)
 [^2]: [Stock Upgrade Video by 3DprintSOS](https://www.youtube.com/watch?v=6afQUIR6Dmo)
 [^3]: [3rd Party Upgrade Video by 3DprintSOS](https://www.youtube.com/watch?v=sQFsnIyJ5BM)
-
