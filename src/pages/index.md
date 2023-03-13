@@ -22,5 +22,7 @@ Notes may include information and tips from other peoples guides. This will be r
 1. Tools
     1. [Git](/cortex/tools/git)
 1. Programming
-    1. [Python](/cortex/tools/git)
+    1. [Python](/cortex/programming/python)
+1. Linux
+    1. [Linux](/cortex/linux/linux)
 
