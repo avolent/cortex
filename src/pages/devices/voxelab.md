@@ -31,12 +31,12 @@ Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explan
 
 - Simple method
 	Confirm whether you printer has a sticker on it with the model of chip.
-![chip.jpg](/cortex/images/devices/voxelab/chip.jpg)
+![chip.jpg](/images/devices/voxelab/chip.jpg)
 If your printer does not have a sticker, it is most likely the G32 or N32
 
 - Effort Required
 	Open the bottom of your printer and confirm by looking at the model number on the chip.
-	![chip_onboard.jpeg](/cortex/images/devices/voxelab/chip_onboard.jpeg)
+	![chip_onboard.jpeg](/images/devices/voxelab/chip_onboard.jpeg)
 
 #### Download custom firmware
 
