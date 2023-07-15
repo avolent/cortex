@@ -16,13 +16,13 @@ Notes may include information and tips from other peoples guides. This will be r
 
 # Contents
 1. Devices
-    1. [Voxelab](/cortex/devices/voxelab)
+    1. [Voxelab](/devices/voxelab)
 1. Networking
-    1. [pfSense](/cortex/networking/pfsense)
+    1. [pfSense](/networking/pfsense)
 1. Tools
-    1. [Git](/cortex/tools/git)
+    1. [Git](/tools/git)
 1. Programming
-    1. [Python](/cortex/programming/python)
+    1. [Python](/programming/python)
 1. Linux
-    1. [Linux](/cortex/linux/linux)
+    1. [Linux](/linux/linux)
 

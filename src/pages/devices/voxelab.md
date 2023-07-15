@@ -67,7 +67,7 @@ Open up windows explorer and format your SD card with the following settings
 - Volume Name : Whatever you want!
 - Quick Format : Checked
 
-![Format Settings](/cortex/images/devices/voxelab/format_settings.png)
+![Format Settings](/images/devices/voxelab/format_settings.png)
 
 #### Preparing for Flashing
 
@@ -77,7 +77,7 @@ Open up windows explorer and format your SD card with the following settings
 - Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.
 End result should look something like this
 
-![SD Folders](/cortex/images/devices/voxelab/sd_folders.png)
+![SD Folders](/images/devices/voxelab/sd_folders.png)
 
 ### Flashing the motherboard
 
