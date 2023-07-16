@@ -7,6 +7,12 @@ The goal of this wiki is to be an accumulation and amalgamation of information f
 Brain dumps and a collection notes/resources from my personal projects.
 Notes may include information and tips from other peoples guides. This will be referenced when required.
 
-URL: https://avolent.io/cortex/
+URL: https://cortex.wiki
 
 CSS is from [Latex.css](https://latex.vercel.app/)
+
+## How to run locally
+
+```bash
+make local
+```
