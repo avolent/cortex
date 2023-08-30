@@ -1,4 +1,5 @@
 ---
+share: true
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: git
@@ -7,10 +8,10 @@ date: Dec 2022
 
 ## Contents
 
-1. [Useful Links](#useful-links)
-1. [Setting up github SSH Keys](#setting-up-github-ssh-keys)
-1. [Commands](#commands)
-1. [References](#references)
+1. [Useful Links](git.md#useful-links)
+1. [Setting up github SSH Keys](git.md#setting-up-github-ssh-keys)
+1. [Commands](git.md#commands)
+1. [References](git.md#references)
 
 ## Useful Links
 
@@ -47,8 +48,7 @@ Copy the contents of your key and add to your github account under - [New SSH Ke
 ```shell
 cat ~/.ssh/key_name.pub
 ```
-
-![add_ssh_key.png](/images/tools/git/add_ssh_key.png)
+![../../../public/images/tools_git_add_ssh_key.png](../../../public/images/tools_git_add_ssh_key.png#)
 
 ## Commands
 
