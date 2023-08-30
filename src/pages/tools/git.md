@@ -1,4 +1,5 @@
 ---
+share: true
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: git
@@ -47,8 +48,7 @@ Copy the contents of your key and add to your github account under - [New SSH Ke
 ```shell
 cat ~/.ssh/key_name.pub
 ```
-
-![add_ssh_key.png](/images/tools/git/add_ssh_key.png)
+![tools_git_add_ssh_key.png](../../../public/images/tools_git_add_ssh_key.png)
 
 ## Commands
 
