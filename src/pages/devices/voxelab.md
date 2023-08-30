@@ -1,4 +1,5 @@
 ---
+share: true
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Voxelab
@@ -7,12 +8,12 @@ date: Dec 2022
 
 ## Contents
 
-1. [Useful Links](#useful-links)
-1. [Updating your printer](#updating-your-printer)
-	1. [Preparation](#preparation)
-	1. [Flashing the motherboard](#flashing-the-motherboard)
-	1. [Flashing the display](#flashing-the-display)
-1. [References](#references)
+1. [Useful Links](voxelab.md#useful-links)
+1. [Updating your printer](voxelab.md#updating-your-printer)
+	1. [Preparation](voxelab.md#preparation)
+	1. [Flashing the motherboard](voxelab.md#flashing-the-motherboard)
+	1. [Flashing the display](voxelab.md#flashing-the-display)
+1. [References](voxelab.md#references)
 
 ## Useful Links
 
@@ -31,12 +32,12 @@ Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explan
 
 - Simple method
 	Confirm whether you printer has a sticker on it with the model of chip.
-![chip.jpg](/images/devices/voxelab/chip.jpg)
+![chip.jpg](../../../public/images/devices_voxelab_chip.jpg)
 If your printer does not have a sticker, it is most likely the G32 or N32
 
 - Effort Required
 	Open the bottom of your printer and confirm by looking at the model number on the chip.
-	![chip_onboard.jpeg](/images/devices/voxelab/chip_onboard.jpeg)
+![[../../../public/images/devices_voxelab_chip_onboard.jpeg|../../../public/images/devices_voxelab_chip_onboard.jpeg]]
 
 #### Download custom firmware
 
@@ -66,8 +67,7 @@ Open up windows explorer and format your SD card with the following settings
 - Allocation Unit Size : 4096 Bytes
 - Volume Name : Whatever you want!
 - Quick Format : Checked
-
-![Format Settings](/images/devices/voxelab/format_settings.png)
+![[../../../public/images/devices_voxelab_format_settings.png|../../../public/images/devices_voxelab_format_settings.png]]
 
 #### Preparing for Flashing
 
@@ -76,8 +76,7 @@ Open up windows explorer and format your SD card with the following settings
 - Now for the .bin file you downloaded earlier, Make a new folder and name it "firmware" (All lowercase) and move it inside.
 - Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.
 End result should look something like this
-
-![SD Folders](/images/devices/voxelab/sd_folders.png)
+![[../../../public/images/devices_voxelab_sd_folders.png|../../../public/images/devices_voxelab_sd_folders.png]]
 
 ### Flashing the motherboard
 

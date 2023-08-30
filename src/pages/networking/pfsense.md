@@ -1,4 +1,5 @@
 ---
+share: true
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: pfSense
@@ -7,11 +8,11 @@ date: Dec 2022
 
 ## Contents
 
-1. [Useful Links](#useful-links)
-1. [Initial Setup](#initial-setup)
-1. [UPNP](#upnp)
-1. [Port Forwarding](#port-forwarding)
-1. [References](#references)
+1. [Useful Links](pfsense.md#userful-links)
+1. [Initial Setup](pfsense.md#initial-setup)
+1. [UPNP](pfsense.md#upnp)
+1. [Port Forwarding](pfsense.md#port-forwarding)
+1. [References](pfsense.md#references)
 
 
 ## Useful Links
