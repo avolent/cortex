@@ -1,10 +1,10 @@
 ---
+share: true
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Cortex Wiki
 date: Dec 2022
 ---
-
 <div class="abstract">
 
 # Goal
@@ -16,13 +16,12 @@ Notes may include information and tips from other peoples guides. This will be r
 
 # Contents
 1. Devices
-    1. [Voxelab](/devices/voxelab)
+    1. [Voxelab](voxelab.md#)
 1. Networking
-    1. [pfSense](/networking/pfsense)
+    1. [pfSense](pfsense.md#)
 1. Tools
-    1. [Git](/tools/git)
+    1. [Git](git.md#)
 1. Programming
-    1. [Python](/programming/python)
+    1. [Python](python.md#)
 1. Linux
-    1. [Linux](/linux/linux)
-
+    1. [Linux](linux.md#)
