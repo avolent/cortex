@@ -1,5 +1,4 @@
 ---
-share: true
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Linux
@@ -7,8 +6,8 @@ date: Mar 2023
 ---
 
 ## Contents
-1. [Useful Links](linux.md#useful-links)
-1. [References](linux.md#references)
+1. [Useful Links](#useful-links)
+1. [References](#references)
 
 ## Useful Links
 
@@ -28,3 +27,4 @@ usermod -aG sudo cortex
 
 ## References
 [^1]: [Example](https://example.com)
+
