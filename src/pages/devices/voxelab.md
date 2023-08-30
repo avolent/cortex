@@ -96,7 +96,7 @@ End result should look something like this
 - Turn the printer back on and wait for the screen to flash blue and then orange.
 - Once showing orange we can put everything back to normal and we now have the new firmware.
 
-**Firmware Upgrade Complete!**
+**Firmware Upgrade Complete!** 
 
 ## References
 
