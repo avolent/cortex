@@ -1,4 +1,5 @@
 ---
+share: true
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Python
