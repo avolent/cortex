@@ -7,8 +7,8 @@ date: Mar 2023
 ---
 
 ## Contents
-1. [Useful Links](linux.md#useful-links)
-1. [References](linux.md#references)
+1. [Useful Links](linux.md##useful-links)
+1. [References](linux.md##references)
 
 ## Useful Links
 
