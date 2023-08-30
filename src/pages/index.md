@@ -1,10 +1,10 @@
 ---
+share: true
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Cortex Wiki
 date: Dec 2022
 ---
-
 <div class="abstract">
 
 # Goal
@@ -25,4 +25,3 @@ Notes may include information and tips from other peoples guides. This will be r
     1. [Python](/programming/python)
 1. Linux
     1. [Linux](/linux/linux)
-
