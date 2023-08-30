@@ -8,11 +8,11 @@ date: Dec 2022
 
 ## Contents
 
-1. [Useful Links](#userful)
-1. [Initial Setup](#initial%20setup)
-1. [UPNP](#upnp)
-1. [Port Forwarding](#port%20forwarding)
-1. [References](#references)
+1. [Useful Links](pfsense.md#userful)
+1. [Initial Setup](pfsense.md#initial-setup)
+1. [UPNP](pfsense.md#upnp)
+1. [Port Forwarding](pfsense.md#port-forwarding)
+1. [References](pfsense.md#references)
 
 
 ## Useful Links
