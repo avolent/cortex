@@ -8,8 +8,8 @@ date: Mar 2023
 
 ## Contents
 
-1. [Useful Links](python.md#useful-links)
-1. [References](python.md#references)
+1. [Useful Links](#useful%20links)
+1. [References](#references)
 
 ## Useful Links
 
@@ -27,7 +27,7 @@ libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 ```
 
-The script will output what to do next. It may be different for your host.
+The script will output what to do next. It may be different for your host. 
 
 ```bash
 # Load pyenv automatically by adding
