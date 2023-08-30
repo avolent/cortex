@@ -8,8 +8,8 @@ date: Mar 2023
 
 ## Contents
 
-1. [Useful Links](#useful%20links)
-1. [References](#references)
+1. [Useful Links](python.md#useful-links)
+1. [References](python.md#references)
 
 ## Useful Links
 
