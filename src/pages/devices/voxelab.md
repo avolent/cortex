@@ -8,12 +8,12 @@ date: Dec 2022
 
 ## Contents
 
-1. [ > Useful-links](.md#Useful-links)
-1. [ > Updating your Printer](.md#Updating%20your%20Printer)
-	1. [ > Preparation](.md#Preparation)
-	1. [ > Flashing the motherboard](.md#Flashing%20the%20motherboard)
-	1. [ > Flashing the display](.md#Flashing%20the%20display)
-1. [ > Reference](.md#Reference)
+1. [ > Useful-links](.md#useful-links)
+1. [ > Updating your Printer](.md#updating-your-printer)
+	1. [ > Preparation](.md#preparation)
+	1. [ > Flashing the motherboard](.md#flashing-the-motherboard)
+	1. [ > Flashing the display](.md#flashing-the-display)
+1. [ > Reference](.md#reference)
 
 ## Useful Links
 
@@ -37,7 +37,7 @@ If your printer does not have a sticker, it is most likely the G32 or N32
 
 - Effort Required
 	Open the bottom of your printer and confirm by looking at the model number on the chip.
-![devices_voxelab_chip_onboard.jpeg](../../../public/images/devices_voxelab_chip_onboard.jpeg)
+![devices_voxelab_chip_onboard.jpeg](../../../public/images/devices_voxelab_chip_onboard.jpeg#)
 
 #### Download custom firmware
 
@@ -67,7 +67,7 @@ Open up windows explorer and format your SD card with the following settings
 - Allocation Unit Size : 4096 Bytes
 - Volume Name : Whatever you want!
 - Quick Format : Checked
-![devices_voxelab_format_settings.png](../../../public/images/devices_voxelab_format_settings.png)
+![devices_voxelab_format_settings.png](../../../public/images/devices_voxelab_format_settings.png#)
 
 #### Preparing for Flashing
 
@@ -76,7 +76,7 @@ Open up windows explorer and format your SD card with the following settings
 - Now for the .bin file you downloaded earlier, Make a new folder and name it "firmware" (All lowercase) and move it inside.
 - Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.
 End result should look something like this
-![devices_voxelab_sd_folders.png](../../../public/images/devices_voxelab_sd_folders.png)
+![devices_voxelab_sd_folders.png](../../../public/images/devices_voxelab_sd_folders.png#)
 
 ### Flashing the motherboard
 
