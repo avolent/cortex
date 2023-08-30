@@ -8,10 +8,10 @@ date: Dec 2022
 
 ## Contents
 
-1. [Useful Links](git.md#useful-links)
-1. [Setting up github SSH Keys](git.md#setting-up-github-ssh-keys)
-1. [Commands](git.md#commands)
-1. [References](git.md#references)
+1. [Useful Links](#useful%20links)
+1. [Setting up github SSH Keys](#setting%20up%20github%20ssh%20keys)
+1. [Commands](#commands)
+1. [References](#references)
 
 ## Useful Links
 
@@ -23,7 +23,7 @@ date: Dec 2022
 ### Linux / WSL
 
 **Generate a SSH Key[^2] or use a pre-existing one [^3]**  
-In the terminal use the following command to generate a key.
+In the terminal use the following command to generate a key. 
 
 ```shell
 ssh-keygen -t ed25519 -C "your_email@example.com"
