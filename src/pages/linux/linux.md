@@ -1,4 +1,5 @@
 ---
+share: true
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Linux
@@ -27,4 +28,3 @@ usermod -aG sudo cortex
 
 ## References
 [^1]: [Example](https://example.com)
-
