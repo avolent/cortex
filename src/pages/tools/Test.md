@@ -6,7 +6,7 @@ title: test
 date: Dec 2022
 ---
 
-![chip](../public/images/chip.jpg)
+![chip](../public/images/tools/chip.jpg)
 
 
 
