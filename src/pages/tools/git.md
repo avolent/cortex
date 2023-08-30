@@ -8,8 +8,8 @@ date: Dec 2022
 
 ## Contents
 
-1. [Useful Links](#useful-links)
-1. [Setting up github SSH Keys](#setting-up-github-ssh-keys)
+1. [Useful Links](#useful%20links)
+1. [Setting up github SSH Keys](#setting%20up%20github%20ssh%20keys)
 1. [Commands](#commands)
 1. [References](#references)
 
