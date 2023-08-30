@@ -6,14 +6,15 @@ title: Voxelab
 date: Dec 2022
 ---
 
+
 ## Contents
 
-1. [Useful Links](#useful%20links)
-1. [Updating your printer](#updating%20your%20printer)
-	1. [Preparation](#preparation)
-	1. [Flashing the motherboard](#flashing%20the%20motherboard)
-	1. [Flashing the display](#flashing%20the%20display)
-1. [References](#references)
+1. [ > Useful links](.md#useful-links)
+1. [ > Updating your printer](.md#updating-your-printer)
+	1. [ > Preparation](.md#preparation)
+	1. [ > Flashing the motherboard](.md#flashing-the-motherboard)
+	1. [ > Flashing the display](.md#flashing-the-display)
+1. [ > References](.md#references)
 
 ## Useful Links
 
