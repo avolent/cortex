@@ -8,11 +8,11 @@ date: Dec 2022
 
 ## Contents
 
-1. [Useful Links](pfsense.md#userful-links)
-1. [Initial Setup](pfsense.md#initial-setup)
-1. [UPNP](pfsense.md#upnp)
-1. [Port Forwarding](pfsense.md#port-forwarding)
-1. [References](pfsense.md#references)
+1. [Useful Links](#userful%20links)
+1. [Initial Setup](#initial%20setup)
+1. [UPNP](#upnp)
+1. [Port Forwarding](#port%20forwarding)
+1. [References](#references)
 
 
 ## Useful Links
@@ -81,7 +81,7 @@ Assign your **Static IP** addresses.
 
 ### 8. [/Services/DNS Resolver/General Settings](https://192.168.1.1/services_unbound.php)
 
-Enable **DNSSEC** Support.  
+Enable **DNSSEC** Support.   
 Enable **Python Module** (Leave the settings default) *If you want regex blocking*.  
 
 ### 9. [/Services/Dynamic DNS/Dynamic DNS Clients](https://192.168.1.1/services_dyndns.php)
