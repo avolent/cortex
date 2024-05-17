@@ -24,7 +24,6 @@ date: Dec 2022
 ### Preparation
 
 Important Sticky Note to read before starting [here](https://www.reddit.com/r/VoxelabAquila/comments/lvlzf2/sticky_post_with_links_to_important_posts/) [^1]
-
 #### Determine which firmware your printer requires. (G32 or N32)
 
 Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explanation_on_aquila_chips_from_voxelab_team/)

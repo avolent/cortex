@@ -2,7 +2,7 @@
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: git
-date: Dec 2022
+date: May 2024
 ---
 
 ## Contents
@@ -19,7 +19,7 @@ date: Dec 2022
 
 ## Setting Up Github SSH Keys
 
-### Linux / WSL
+### Linux / WSL / MacOS
 
 **Generate a SSH Key[^2] or use a pre-existing one [^3]**  
 In the terminal use the following command to generate a key.

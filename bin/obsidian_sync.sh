@@ -9,6 +9,8 @@ cp -R "${OBSIDIAN_PATH}" ./tmp
 find "tmp" -type f -name "*.md" | while read -r file; do
     # Use sed to replace the image links
     sed -i.backup 's/!\[\([^]]*\)\](cortex\/\([^)]*\))/![\1](\/\2)/g' "$file"
+    # Use sed to replace the page links
+    sed -i.backup 's/\[\([^]]*\)\](cortex\/\([^)]*\))/[\1](\/\2)/g' "$file"
 done
 find "tmp" -name "*.backup" -type f -delete
 echo "Markdown updated..."
