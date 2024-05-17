@@ -2,7 +2,7 @@
 layout: /src/layouts/BaseLayout.astro
 author: 
 title: 
-date: month year
+date: "May 2024 "
 ---
 
 ## Contents
@@ -15,4 +15,3 @@ date: month year
 
 ## References
 [^1]: [Example](https://example.com)
-
