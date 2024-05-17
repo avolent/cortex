@@ -6,7 +6,7 @@ title: truenas
 ---
 ## Contents
 
-1. [Useful Links](#useful%20links)
+1. [Useful Links](#useful-links)
 2. [Content](#content)
 4. [References](#references)
 

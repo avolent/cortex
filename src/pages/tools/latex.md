@@ -7,7 +7,7 @@ date: May 2024
 
 ## Contents
 
-1. [Useful Links](#useful%20links)
+1. [Useful Links](#useful-links)
 3. [Setup Visual Studio Code for LaTeX](#setup%20visual%20studio%20code%20for%20latex)
 4. [References](#references)
 
