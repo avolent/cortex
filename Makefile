@@ -3,3 +3,9 @@ local: install
 
 install:
 	npm install
+
+upgrade:
+	npx @astrojs/upgrade 
+
+obsidian_sync:
+	bin/obsidian_sync.sh
