@@ -20,7 +20,7 @@ Notes may include information and tips from other peoples guides. This will be r
     1. ![Voxelab](/devices/voxelab)
 2. Homelab
     1. ![pfSense](/homelab/pfsense)
-    2. [TrueNAS](homelab/truenas.md)
+    2. ![TrueNAS](/homelab/truenas)
 3. Tools
     1. ![Git](/tools/git)
     2. ![LaTeX](/tools/latex)
