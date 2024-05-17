@@ -16,15 +16,15 @@ Notes may include information and tips from other peoples guides. This will be r
 
 # Contents
 1. Devices
-    1. [Voxelab](/pages/devices/voxelab)
+	1. [Voxelab](/pages/devices/voxelab)
 2. Homelab
 	1. [pfSense](/pages/homelab/pfsense)
 	2. [TrueNAS](homelab/truenas.md)
 3. Tools
-    1. [Git](/pages/tools/git)
-    2. [LaTeX](/pages/tools/latex)
+	1. [Git](/pages/tools/git)
+	2. [LaTeX](/pages/tools/latex)
 4. Programming
-    1. [Python](/pages/programming/python)
+	1. [Python](/pages/programming/python)
 5. Linux
-    1. [Linux](/pages/linux/linux)
+	1. [Linux](/pages/linux/linux)
     
