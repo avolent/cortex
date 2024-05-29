@@ -8,7 +8,7 @@ date: May 2024
 ## Contents
 
 1. [Useful Links](#useful-links)
-3. [Setup Visual Studio Code for LaTeX](#setup%20visual%20studio%20code%20for%20latex)
+3. [Setup Visual Studio Code for LaTeX](#setup-visual-studio-code-for-latex)
 4. [References](#references)
 
 ## Useful Links
@@ -20,6 +20,6 @@ date: May 2024
 1. Install mactex via brew: `brew install --cask mactex`
 2. Install the vscode extension LaTeX Workshop.
 3. Enjoy building latex files!
-   ![[cortex/images/tools/latex/latex-workshop.png]]
+   ![latex-workshop](/images/tools/latex/latex-workshop.png)
 
 ## References
