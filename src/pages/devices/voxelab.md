@@ -2,17 +2,17 @@
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Voxelab
-date: Dec 2022
+date: May 2024
 ---
 
 ## Contents
 
 1. [Useful Links](#useful-links)
-1. [Updating your printer](#updating-your-printer)
+2. [Updating your Printer](#updating-your-printer)
 	1. [Preparation](#preparation)
 	1. [Flashing the motherboard](#flashing-the-motherboard)
 	1. [Flashing the display](#flashing-the-display)
-1. [References](#references)
+3. [References](#references)
 
 ## Useful Links
 
@@ -66,7 +66,7 @@ Open up windows explorer and format your SD card with the following settings
 - Volume Name : Whatever you want!
 - Quick Format : Checked
 
-![Format Settings](/images/devices/voxelab/format_settings.png)
+![format_settings](/images/devices/voxelab/format_settings.png)
 
 #### Preparing for Flashing
 
@@ -76,7 +76,7 @@ Open up windows explorer and format your SD card with the following settings
 - Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.
 End result should look something like this
 
-![SD Folders](/images/devices/voxelab/sd_folders.png)
+![sd_folders](/images/devices/voxelab/sd_folders.png)
 
 ### Flashing the motherboard
 

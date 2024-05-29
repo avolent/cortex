@@ -8,4 +8,5 @@ upgrade:
 	npx @astrojs/upgrade 
 
 obsidian_sync:
-	bin/obsidian_sync.sh
+	brew install pyenv
+	python3.12 bin/obsidian_sync.py

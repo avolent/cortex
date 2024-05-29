@@ -17,14 +17,14 @@ Notes may include information and tips from other peoples guides. This will be r
 # Contents
 
 1. Devices
-    1. ![Voxelab](/devices/voxelab)
+    1. [Voxelab](/devices/voxelab)
 2. Homelab
-    1. ![pfSense](/homelab/pfsense)
-    2. ![TrueNAS](/homelab/truenas)
+    1. [pfSense](/homelab/pfsense)
+    2. [Truenas](/homelab/truenas) 
 3. Tools
-    1. ![Git](/tools/git)
-    2. ![LaTeX](/tools/latex)
+    1. [git](/tools/git)
+    2. [LaTeX](/tools/latex)
 4. Programming
-    1. ![Python](/programming/python)
+    1. [Python](/programming/python)
 5. Linux
-    1. ![Linux](/linux/linux)
+    1. [Linux](/linux/linux)
