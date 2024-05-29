@@ -2,7 +2,8 @@
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Linux
-date: Mar 2023
+date: May 2024
+publish: "true"
 ---
 
 ## Contents

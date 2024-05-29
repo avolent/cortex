@@ -1,8 +1,9 @@
 ---
-date: May 2024
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: truenas
+date: May 2024
+publish: "true"
 ---
 
 ## Contents

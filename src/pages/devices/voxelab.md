@@ -3,6 +3,7 @@ layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Voxelab
 date: May 2024
+publish: "true"
 ---
 
 ## Contents
