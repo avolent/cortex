@@ -1,17 +1,25 @@
 ---
 layout: /src/layouts/BaseLayout.astro
 author: avolent
-title: git
+title: Setup git with extra tips and tricks
 date: May 2024
 publish: "true"
 ---
+## Summary
+
+This page will go over how I setup git and some of the useful tip/tricks I wish I knew before.
+
+## Assumptions
+
+- You use GitHub for your git activities
+- You are using Linux/WSL/MacOS
 
 ## Contents
 
 1. [Useful Links](#useful-links)
-1. [Setting up github SSH Keys](#setting-up-github-ssh-keys)
-1. [Commands](#commands)
-1. [References](#references)
+2. . [Setting up github SSH Keys](#setting-up-github-ssh-keys)
+3. [Commands](#commands)
+4. [References](#references)
 
 ## Useful Links
 

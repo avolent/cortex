@@ -1,18 +1,27 @@
 ---
 layout: /src/layouts/BaseLayout.astro
 author: avolent
-title: Voxelab
+title: Flashing the Voxelab Aquila
 date: May 2024
 publish: "true"
 ---
+## Summary
+
+The following page will go over how to flash your voxelab aquila with custom firmware allowing you to get the most out of your 3d printer.
+
+## Assumptions
+
+- You have a Windows device (Similar for other operating systems).
+- Available SD card.
+- You have an Voxelab Aquila
 
 ## Contents
 
 1. [Useful Links](#useful-links)
-2. [Updating your Printer](#updating-your-printer)
+2. [Flashing your Printer](cortex/pages/devices/flashing%20the%20voxelab%20aquila.md#Flashing%20your%20Printer)
 	1. [Preparation](#preparation)
-	1. [Flashing the motherboard](#flashing-the-motherboard)
-	1. [Flashing the display](#flashing-the-display)
+	2. [Flashing the motherboard](#flashing-the-motherboard)
+	3. [Flashing the display](#flashing-the-display)
 3. [References](#references)
 
 ## Useful Links
@@ -20,7 +29,7 @@ publish: "true"
 - [Custom Firmware](https://github.com/alexqzd/Marlin/releases) - Video Tutorial [^3]
 - [Stock Firmware](https://www.voxelab3dp.com/download) - Video Tutorial [^2]
 
-## Updating your Printer
+## Flashing your Printer
 
 ### Preparation
 
@@ -31,12 +40,12 @@ Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explan
 
 - Simple method
 	Confirm whether you printer has a sticker on it with the model of chip.
-![chip.jpg](/images/devices/voxelab/chip.jpg)
+![chip.jpg](/images/devices/flashing%20the%20voxelab%20aquila/chip.jpg)
 If your printer does not have a sticker, it is most likely the G32 or N32
 
 - Effort Required
 	Open the bottom of your printer and confirm by looking at the model number on the chip.
-	![chip_onboard.jpeg](/images/devices/voxelab/chip_onboard.jpeg)
+	![chip_onboard.jpeg](/images/devices/flashing%20the%20voxelab%20aquila/chip_onboard.jpeg)
 
 #### Download custom firmware
 
@@ -67,7 +76,7 @@ Open up windows explorer and format your SD card with the following settings
 - Volume Name : Whatever you want!
 - Quick Format : Checked
 
-![format_settings](/images/devices/voxelab/format_settings.png)
+![format_settings](/images/devices/flashing%20the%20voxelab%20aquila/format_settings.png)
 
 #### Preparing for Flashing
 
@@ -77,7 +86,7 @@ Open up windows explorer and format your SD card with the following settings
 - Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.
 End result should look something like this
 
-![sd_folders](/images/devices/voxelab/sd_folders.png)
+![sd_folders](/images/devices/flashing%20the%20voxelab%20aquila/sd_folders.png)
 
 ### Flashing the motherboard
 
