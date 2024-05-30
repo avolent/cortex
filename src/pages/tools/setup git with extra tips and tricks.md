@@ -5,6 +5,7 @@ title: Setup git with extra tips and tricks
 date: May 2024
 publish: "true"
 ---
+
 ## Summary
 
 This page will go over how I setup git and some of the useful tip/tricks I wish I knew before.
@@ -17,7 +18,7 @@ This page will go over how I setup git and some of the useful tip/tricks I wish 
 ## Contents
 
 1. [Useful Links](#useful-links)
-2. . [Setting up github SSH Keys](#setting-up-github-ssh-keys)
+2. [Setting up github SSH Keys](#setting-up-github-ssh-keys)
 3. [Commands](#commands)
 4. [References](#references)
 
@@ -50,7 +51,7 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/key_name
 ```
 
-**Now add the key to your github account**
+**Now add the key to your github account**  
 Copy the contents of your key and add to your github account under - [New SSH Key](https://github.com/settings/ssh/new)
 
 ```shell
@@ -60,6 +61,7 @@ cat ~/.ssh/key_name.pub
 ![add_ssh_key.png](/images/tools/git/add_ssh_key.png)
 
 **You can test your connection with the following:**
+
 ```shell
 $ ssh -T git@github.com
 > Hi USERNAME! You've successfully authenticated, but GitHub does not

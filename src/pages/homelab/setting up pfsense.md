@@ -5,6 +5,7 @@ title: Setting up pfSense
 date: May 2024
 publish: "true"
 ---
+
 ## Summary
 
 The following page goes over how I configure my pfSense at home and what steps it takes to get there.
@@ -17,10 +18,10 @@ The following page goes over how I configure my pfSense at home and what steps i
 ## Contents
 
 1. [Useful Links](#useful-links)
-1. [Initial Setup](#initial-setup)
-1. [UPNP](#upnp)
-1. [Port Forwarding](#port-forwarding)
-1. [References](#references)
+2. [Initial Setup](#initial-setup)
+3. [UPNP](#upnp)
+4. [Port Forwarding](#port-forwarding)
+5. [References](#references)
 
 ## Useful Links
 
@@ -29,9 +30,9 @@ The following page goes over how I configure my pfSense at home and what steps i
 - [Pfsense pfblockerng Setup](https://www.youtube.com/watch?v=xizAeAqYde4&ab_channel=LawrenceSystems)
 - [Wireguard Setup](https://www.youtube.com/watch?v=8jQ5UE_7xds&ab_channel=LawrenceSystems)
 
-## Default pfsense Login
+## Default Pfsense Login
 
-**Username:** admin
+**Username:** admin  
 **Password:** pfsense
 
 ## Initial Setup
@@ -78,7 +79,7 @@ Log out and log into the new user.
 ### 8. [/Interfaces/WAN](https://192.168.1.1/interfaces.php?if=wan)
 
 Changing port assignments can be done in [/Interfaces/Assignments](https://192.168.1.1/interfaces_assign.php).  
-Most things are fine as default in here.
+Most things are fine as default in here.  
 If you need/want IPV6 change **DHCPv6 Prefix Delegation size** to the size your internet provider has given you.  
 
 ### 7. [/Services/DHCP Server/LAN](https://192.168.1.1/services_dhcp.php)
@@ -99,13 +100,13 @@ Create a Cloudflare ddns client.
 
 **CRON Settings** = Once a day.  
 
-### 11. [/Firewall/pfBlockerNG/IP](https://192.168.1.1/pfblockerng/pfblockerng_ip.php) - Make sure you force reload at the end to save changes.
+### 11. [/Firewall/pfBlockerNG/IP](https://192.168.1.1/pfblockerng/pfblockerng_ip.php) - Make Sure You Force Reload at the End to save Changes
 
 Enable **Floating Rules**.  
 Enable **Kill States**.  
 Add **MaxMind License Key**.  
 
-### 12. [/Firewall/pfBlockerNG/DNSBL](https://192.168.1.1/pfblockerng/pfblockerng_dnsbl.php) 
+### 12. [/Firewall/pfBlockerNG/DNSBL](https://192.168.1.1/pfblockerng/pfblockerng_dnsbl.php)
 
 **DNSBL Mode** = Unbound Python Mode *If you want regex blocking*.  
 **Regex Blocking** = Enable.  
@@ -187,22 +188,24 @@ Add a rule for a port you would like to forward.
 
 Save the rule.  
 
-> These ports should now be open to internet. BE CAREFUL and open only what is needed. Block unecessary global subnets etc via PFBlockerNG.  
+> These ports should now be open to internet. BE CAREFUL and open only what is needed. Block unnecessary global subnets etc via PFBlockerNG.  
 
 ## Buffer Bloat
 
-todo
+todo  
 [^2]
 
 ## Wireguard
 
-todo
+todo  
 [^5]
 
 ## VLANs
 
 todo
+
 ## References
+
 [^1]: [How to get open NAT](https://www.amixa.com/blog/2020/04/02/how-to-get-open-nat-with-xbox-or-xbox-one-and-pfsense-firewall/)
 [^2]: [Buffer Bloat by Lawrence Systems](https://www.youtube.com/watch?v=iXqExAALzR8&ab_channel=LawrenceSystems)
 [^3]: [2020 Pfsense Setup by Lawrence Systems](https://www.youtube.com/watch?v=fsdm5uc_LsU&t=662s)
