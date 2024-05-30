@@ -5,6 +5,7 @@ title: Python development setup
 date: May 2024
 publish: "true"
 ---
+
 ## Summary
 
 The following pages is how I setup my python environments for development. It is something I wish I knew before starting and allows you to get up and running quickly.
@@ -17,7 +18,7 @@ The following pages is how I setup my python environments for development. It is
 ## Contents
 
 1. [Useful Links](#useful-links)
-1. [References](#references)
+2. [References](#references)
 
 ## Useful Links
 
@@ -49,7 +50,6 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 ```
 
-
 ## Pipenv
 
 ### Installation
@@ -63,6 +63,8 @@ python3 -m pip install --user pipenv
 ```
 
 ## References
-https://www.newline.co/courses/create-a-serverless-slackbot-with-aws-lambda-and-python/installing-python-3-and-pyenv-on-macos-windows-and-linux
-https://gist.github.com/planetceres/8adb62494717c71e93c96d8adad26f5c
+
+<https://www.newline.co/courses/create-a-serverless-slackbot-with-aws-lambda-and-python/installing-python-3-and-pyenv-on-macos-windows-and-linux>  
+<https://gist.github.com/planetceres/8adb62494717c71e93c96d8adad26f5c>
+
 [^1]: [Example](https://example.com)

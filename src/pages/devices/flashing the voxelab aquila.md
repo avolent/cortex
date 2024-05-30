@@ -5,6 +5,7 @@ title: Flashing the Voxelab Aquila
 date: May 2024
 publish: "true"
 ---
+
 ## Summary
 
 The following page will go over how to flash your voxelab aquila with custom firmware allowing you to get the most out of your 3d printer.
@@ -29,44 +30,45 @@ The following page will go over how to flash your voxelab aquila with custom fir
 - [Custom Firmware](https://github.com/alexqzd/Marlin/releases) - Video Tutorial [^3]
 - [Stock Firmware](https://www.voxelab3dp.com/download) - Video Tutorial [^2]
 
-## Flashing your Printer
+## Flashing Your Printer
 
 ### Preparation
 
 Important Sticky Note to read before starting [here](https://www.reddit.com/r/VoxelabAquila/comments/lvlzf2/sticky_post_with_links_to_important_posts/) [^1]
-#### Determine which firmware your printer requires. (G32 or N32)
+
+#### Determine Which Firmware Your Printer Requires. (G32 or N32)
 
 Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explanation_on_aquila_chips_from_voxelab_team/)
 
-- Simple method
-	Confirm whether you printer has a sticker on it with the model of chip.
-![chip.jpg](/images/devices/flashing%20the%20voxelab%20aquila/chip.jpg)
+- Simple method  
+	Confirm whether you printer has a sticker on it with the model of chip.  
+![chip.jpg](/images/devices/flashing%20the%20voxelab%20aquila/chip.jpg)  
 If your printer does not have a sticker, it is most likely the G32 or N32
 
-- Effort Required
-	Open the bottom of your printer and confirm by looking at the model number on the chip.
+- Effort Required  
+	Open the bottom of your printer and confirm by looking at the model number on the chip.  
 	![chip_onboard.jpeg](/images/devices/flashing%20the%20voxelab%20aquila/chip_onboard.jpeg)
 
-#### Download custom firmware
+#### Download Custom Firmware
 
 - Download the .bin file for your device version from [Custom Firmware](https://github.com/alexqzd/Marlin/releases)
 
-**Types of version**
-	- **<u>Bed Leveling Type</u>**
-	BLTouch: Auto Bed Leveling
-	Default: No Auto Bed Leveling
-	Manual Mesh: Manual Bed Leveling, configure your own mesh.
-	UBL: Unified Bed Leveling
-	- **<u>Mesh Size</u>**
-	3x3: 3 points by 3 points mesh.
-	4x4: 4 points by 4 points mesh.
-	and so on..
-	- **<u>Chip Model</u>**
+**Types of version**  
+	- **<u>Bed Leveling Type</u>**  
+	BLTouch: Auto Bed Leveling.  
+	Default: No Auto Bed Leveling.  
+	Manual Mesh: Manual Bed Leveling, configure your own mesh.  
+	UBL: Unified Bed Leveling.  
+	- **<u>Mesh Size</u>**  
+	3x3: 3 points by 3 points mesh.  
+	4x4: 4 points by 4 points mesh.  
+	and so on..  
+	- **<u>Chip Model</u>**  
 	G32 or N32: Determined earlier
 
-- Also download the source code .zip file aswell.
+- Also download the source code .zip file as well.
 
-#### Format the SD card
+#### Format the SD Card
 
 Open up windows explorer and format your SD card with the following settings
 
@@ -83,20 +85,20 @@ Open up windows explorer and format your SD card with the following settings
 - Extract the source code zip file.
 - Go into the path "/Display Firmware/Firmware Sets". The folder set you can now see are basically the theme for the display. Pick one you like, copy it to your desktop and then rename it to just "DWIN_SET" (All capitals).
 - Now for the .bin file you downloaded earlier, Make a new folder and name it "firmware" (All lowercase) and move it inside.
-- Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.
+- Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.  
 End result should look something like this
 
 ![sd_folders](/images/devices/flashing%20the%20voxelab%20aquila/sd_folders.png)
 
-### Flashing the motherboard
+### Flashing the Motherboard
 
 - Make sure printer is off.
 - Place SD card into Machine
 - Turn on the printer
-- Watch the screen and look for a loading bar. It will give you a check mark once complete.
-*The screen will look really messy after flashing the mobo, this is normal as we havent flashed the display yet.*
+- Watch the screen and look for a loading bar. It will give you a check mark once complete.  
+*The screen will look really messy after flashing the mobo, this is normal as we haven't flashed the display yet.*
 
-### Flashing the display
+### Flashing the Display
 
 - Make sure the printer is off.
 - Remove the screen and the screws from the back.
