@@ -1,10 +1,18 @@
 ---
 layout: /src/layouts/BaseLayout.astro
 author: avolent
-title: Python
+title: Python development setup
 date: May 2024
 publish: "true"
 ---
+## Summary
+
+The following pages is how I setup my python environments for development. It is something I wish I knew before starting and allows you to get up and running quickly.
+
+## Assumptions
+
+- Basic Python knowledge
+- You are using Mac OS (May be similar to other OS)
 
 ## Contents
 
@@ -12,6 +20,9 @@ publish: "true"
 1. [References](#references)
 
 ## Useful Links
+
+- [pyenv]()
+- [pipenv]()
 
 ## Pyenv
 

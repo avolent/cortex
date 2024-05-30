@@ -1,10 +1,18 @@
 ---
 layout: /src/layouts/BaseLayout.astro
 author: avolent
-title: pfSense
+title: Setting up pfSense
 date: May 2024
 publish: "true"
 ---
+## Summary
+
+The following page goes over how I configure my pfSense at home and what steps it takes to get there.
+
+## Assumptions
+
+- You are using pfSense
+- Basic understanding of networking & pfSense
 
 ## Contents
 
@@ -183,14 +191,17 @@ Save the rule.
 
 ## Buffer Bloat
 
+todo
 [^2]
 
 ## Wireguard
 
+todo
 [^5]
 
 ## VLANs
 
+todo
 ## References
 [^1]: [How to get open NAT](https://www.amixa.com/blog/2020/04/02/how-to-get-open-nat-with-xbox-or-xbox-one-and-pfsense-firewall/)
 [^2]: [Buffer Bloat by Lawrence Systems](https://www.youtube.com/watch?v=iXqExAALzR8&ab_channel=LawrenceSystems)
