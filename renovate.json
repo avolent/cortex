@@ -4,62 +4,67 @@
     "config:recommended",
     ":dependencyDashboard",
     ":semanticCommits",
-    ":preserveSemverRanges"
+    ":separateMajorReleases"
   ],
-  "timezone": "UTC",
-  "schedule": ["before 4am on Monday"],
   "labels": ["dependencies"],
-  "assignees": ["@avolent"],
-  "reviewers": ["@avolent"],
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 2,
+  "schedule": ["before 9am on monday"],
+  "timezone": "Australia/Sydney",
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 5,
+  "semanticCommits": "enabled",
   "commitMessagePrefix": "chore(deps):",
   "commitMessageAction": "update",
-  "rangeStrategy": "bump",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{newVersion}}",
+  "ignoreTests": false,
+  "reviewersFromCodeOwners": true,
+  "assignAutomerge": false,
   "packageRules": [
     {
-      "description": "Astro and related packages - automerge minor/patch",
-      "matchPackagePatterns": ["^astro", "^@astrojs/"],
-      "groupName": "Astro ecosystem",
-      "automerge": true,
-      "matchUpdateTypes": ["minor", "patch"]
+      "description": "Group all Astro packages together",
+      "groupName": "astro packages",
+      "matchManagers": ["npm"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "matchPackagePatterns": ["^astro$", "^@astrojs/"]
     },
     {
-      "description": "Development dependencies - automerge minor/patch",
+      "description": "Automerge npm dev dependencies (patch and minor)",
+      "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
-      "matchUpdateTypes": ["minor", "patch"]
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
     },
     {
-      "description": "Major updates - require manual review",
+      "description": "Group GitHub Actions updates",
+      "groupName": "github actions",
+      "matchManagers": ["github-actions"],
+      "semanticCommitType": "ci",
+      "semanticCommitScope": "actions"
+    },
+    {
+      "description": "Require approval for major updates",
       "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "major-update"],
       "automerge": false,
-      "labels": ["dependencies", "major-update"]
+      "prPriority": 10
     },
     {
-      "description": "Pin GitHub Actions to digests",
+      "description": "Pin GitHub Action versions to commit SHA",
       "matchManagers": ["github-actions"],
       "pinDigests": true
-    },
-    {
-      "description": "Group all non-major updates together weekly",
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch",
-      "schedule": ["before 4am on Monday"]
     }
   ],
   "vulnerabilityAlerts": {
-    "labels": ["security"],
-    "assignees": ["@avolent"],
-    "reviewers": ["@avolent"]
+    "labels": ["security", "dependencies"],
+    "automerge": true,
+    "assignees": []
   },
-  "prBodyTemplate": "{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{footer}}}",
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["before 4am on the first day of the month"]
+    "schedule": ["before 9am on the first day of the month"]
   },
-  "python": {
-    "enabled": false
-  }
+  "postUpdateOptions": ["npmDedupe"]
 }
