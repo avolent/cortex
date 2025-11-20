@@ -1,0 +1,14 @@
+#footnote-label {
+  display: none;
+}
+
+button {
+  text-decoration: none;
+  font-size: 10px;
+  border-radius: 8px;
+  opacity: 0.8;
+}
+
+body {
+  max-width: 100ch;
+}

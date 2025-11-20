@@ -1,0 +1,54 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# environment variables
+.env
+.env.production
+.env.local
+
+# editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# macOS-specific files
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+.pytest_cache/
+.mypy_cache/
+.pytype/
+venv/
+env/
+ENV/
+
+# temporary sync folders
+tmp_pages/
+tmp_images/
+
+# pre-commit
+.pre-commit-cache/
+
+# OS
+Thumbs.db

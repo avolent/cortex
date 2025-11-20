@@ -1,0 +1,45 @@
+---
+const { frontmatter, url } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <title>{frontmatter.title}</title>
+    <link rel="stylesheet" href="https://latex.now.sh/style.css" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="icon" href="/favicon.ico" />
+  </head>
+  <body class="libertinus">
+    <header>
+      <h1 id="home">{frontmatter.title}</h1>
+      <p class="author">
+        <a href="/">Home</a><br />
+        Author: <a href="https://github.com/avolent">{frontmatter.author}</a><br />
+        Updated on: {frontmatter.date}
+        <br />
+        {url}
+        <br />
+        <button id="dark-mode-toggle" type="button" aria-label="Toggle dark mode">Dark mode</button>
+      </p>
+    </header>
+    <main>
+      <article>
+        <slot />
+      </article>
+    </main>
+    <div class="footnotes">
+      <p id="fn1">
+        CSS is from <a href="https://latex.vercel.app/">Latex.css</a> | Wiki built by <a
+          href="https://avolent.io/">avolent.io</a
+        > | Repository located on <a href="https://github.com/avolent/cortex">Github</a>
+      </p>
+      <p id="fn2" style="text-align: right">
+        Return to top <a href="#home">↩</a>
+      </p>
+    </div>
+    <script is:inline src="/dark-mode.js"></script>
+    <script is:inline src="/toc.js"></script>
+  </body>
+</html>

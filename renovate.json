@@ -1,0 +1,65 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":preserveSemverRanges"
+  ],
+  "timezone": "UTC",
+  "schedule": ["before 4am on Monday"],
+  "labels": ["dependencies"],
+  "assignees": ["@avolent"],
+  "reviewers": ["@avolent"],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "commitMessagePrefix": "chore(deps):",
+  "commitMessageAction": "update",
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "description": "Astro and related packages - automerge minor/patch",
+      "matchPackagePatterns": ["^astro", "^@astrojs/"],
+      "groupName": "Astro ecosystem",
+      "automerge": true,
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "Development dependencies - automerge minor/patch",
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "Major updates - require manual review",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major-update"]
+    },
+    {
+      "description": "Pin GitHub Actions to digests",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true
+    },
+    {
+      "description": "Group all non-major updates together weekly",
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "schedule": ["before 4am on Monday"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "assignees": ["@avolent"],
+    "reviewers": ["@avolent"]
+  },
+  "prBodyTemplate": "{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{footer}}}",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 4am on the first day of the month"]
+  },
+  "python": {
+    "enabled": false
+  }
+}
