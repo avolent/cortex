@@ -41,3 +41,14 @@ upgrade: ## Upgrade Astro to latest version
 	npx @astrojs/upgrade
 
 local: dev ## Alias for dev (backwards compatibility)
+hooks: ## Setup git hooks using pre-commit
+	@echo "Setting up git hooks..."
+	@./setup-hooks.sh
+
+hooks-run: ## Run pre-commit hooks on all files
+	@echo "Running pre-commit hooks..."
+	@pre-commit run --all-files
+
+hooks-update: ## Update pre-commit hooks
+	@echo "Updating pre-commit hooks..."
+	@pre-commit autoupdate

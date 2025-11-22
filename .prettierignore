@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+.astro/
+
+# Cache
+.cache/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+
+# Generated files
+CHANGELOG.md
+
+# Other
+coverage/
+*.min.js
+*.min.css
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

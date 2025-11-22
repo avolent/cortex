@@ -53,13 +53,10 @@ cd cortex
 # Install dependencies
 make install
 
-# Setup git hooks for commit validation (choose one method)
-
-# Method 1: Standalone git hooks (no npm required)
+# Setup git hooks (pre-commit framework)
 ./setup-hooks.sh
-
-# Method 2: npm-based hooks (Husky - runs automatically with npm install)
-# Already installed if you ran 'make install'
+# or
+make hooks
 
 # Start development server
 make dev
@@ -69,29 +66,31 @@ The site will be available at `http://localhost:4321`
 
 ### Git Hooks Setup
 
-This repository enforces semantic versioning through git hooks. Choose one method:
-
-**Option 1: Standalone Hooks (Recommended for non-npm users)**
+This repository uses [pre-commit](https://pre-commit.com/) framework to enforce code quality and commit standards:
 
 ```bash
+# Setup hooks (requires pre-commit to be installed)
 ./setup-hooks.sh
+# or
+make hooks
 ```
 
-- No npm dependencies required
-- Uses `.githooks` directory
-- Configures `git config core.hooksPath`
+**What it does:**
 
-**Option 2: Husky (Automatic with npm)**
+- Validates commit messages (Conventional Commits)
+- Formats code (Prettier, ESLint)
+- Lints Python code (Ruff)
+- Checks Markdown files
+- Detects secrets and sensitive data
+- Runs file checks (trailing whitespace, etc.)
+
+**Installing pre-commit:**
 
 ```bash
-npm install
+pip install pre-commit
+# or
+brew install pre-commit
 ```
-
-- Automatically configured via `prepare` script
-- Integrated with npm workflow
-- Uses `.husky` directory
-
-Both methods validate commit messages and reject invalid commits.
 
 ## Available Commands
 
@@ -193,7 +192,7 @@ The sync script:
 
 ## Project Structure
 
-```
+```text
 cortex/
 ├── bin/
 │   └── obsidian_sync.py    # Obsidian sync script
@@ -327,7 +326,7 @@ This project follows [Semantic Versioning](https://semver.org/) and enforces [Co
 
 All commits must follow this format:
 
-```
+```text
 <type>(<scope>): <subject>
 ```
 
@@ -341,13 +340,13 @@ docs(readme): update installation steps
 
 ### Making Commits
 
-**Option 1: Interactive (Recommended)**
+#### Option 1: Interactive (Recommended)
 
 ```bash
 npm run commit
 ```
 
-**Option 2: Manual**
+#### Option 2: Manual
 
 ```bash
 git commit -m "feat(search): add full-text search"
