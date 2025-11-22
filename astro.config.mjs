@@ -3,6 +3,6 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://avolent.github.io/cortex',
+  site: 'https://cortex.wiki',
   integrations: [mdx(), sitemap()],
 });
