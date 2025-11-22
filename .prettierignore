@@ -22,6 +22,9 @@ npm-debug.log*
 # Git
 .git/
 
+# Generated files
+CHANGELOG.md
+
 # Other
 coverage/
 *.min.js
