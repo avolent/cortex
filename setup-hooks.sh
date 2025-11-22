@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Setup Git Hooks
-# Run this after cloning the repository to enable pre-commit validation
+# Setup Git Hooks using pre-commit framework
+# Run this after cloning the repository
 #
 
 set -e
@@ -10,55 +10,63 @@ set -e
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
+BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo "Setting up Git hooks for cortex-wiki..."
+echo -e "${BLUE}════════════════════════════════════════════${NC}"
+echo -e "${BLUE}  Setting up Git hooks (pre-commit)${NC}"
+echo -e "${BLUE}════════════════════════════════════════════${NC}"
 echo
 
 # Check if we're in a git repository
-if [ ! -d ".git" ]; then
+if [[ ! -d ".git" ]]; then
     echo -e "${RED}❌ Error: Not in a git repository${NC}"
-    echo "Please run this script from the root of the cortex repository"
     exit 1
 fi
 
-# Check if .githooks directory exists
-if [ ! -d ".githooks" ]; then
-    echo -e "${RED}❌ Error: .githooks directory not found${NC}"
-    echo "This script should be run from the repository root"
+# Check if pre-commit is installed
+if ! command -v pre-commit >/dev/null 2>&1; then
+    echo -e "${RED}❌ pre-commit is not installed${NC}"
+    echo
+    echo "Install with one of:"
+    echo "  pip install pre-commit"
+    echo "  brew install pre-commit"
+    echo
     exit 1
 fi
 
-# Make hooks executable
-chmod +x .githooks/*
+echo -e "${GREEN}✓${NC} pre-commit is installed"
+echo
 
-# Configure git to use .githooks
-git config core.hooksPath .githooks
-
-# Verify configuration
-HOOKS_PATH=$(git config --get core.hooksPath)
-
-if [ "$HOOKS_PATH" = ".githooks" ]; then
-    echo -e "${GREEN}✓${NC} Git hooks configured successfully!"
-    echo
-    echo "Commit message validation is now active and will:"
-    echo "  • Validate semantic versioning format before each commit"
-    echo "  • Check commit message structure (type, scope, subject)"
-    echo "  • Ensure header is ≤ 100 characters"
-    echo "  • Verify subject doesn't end with a period"
-    echo "  • Provide helpful error messages for invalid commits"
-    echo
-    echo -e "${YELLOW}Alternative: npm-based hooks${NC}"
-    echo "If you prefer using Husky (npm-based hooks), run:"
-    echo "  npm install"
-    echo
-    echo -e "${GREEN}Setup complete!${NC}"
-    echo
-    echo "Try making a commit to see the hook in action:"
-    echo "  git commit -m \"test(hooks): verify commit validation\""
-else
-    echo -e "${YELLOW}⚠${NC} Warning: Hooks may not be configured correctly"
-    echo "Expected: .githooks"
-    echo "Got: $HOOKS_PATH"
-    exit 1
+# Remove old .githooks configuration if it exists
+if git config --get core.hooksPath >/dev/null 2>&1; then
+    OLD_PATH=$(git config --get core.hooksPath)
+    echo -e "${YELLOW}⚠${NC}  Removing old hooksPath configuration: ${OLD_PATH}"
+    git config --unset core.hooksPath
 fi
+
+# Install pre-commit hooks
+echo "Installing pre-commit hooks..."
+pre-commit install --install-hooks
+pre-commit install --hook-type commit-msg
+
+echo
+echo -e "${GREEN}════════════════════════════════════════════${NC}"
+echo -e "${GREEN}  ✓ Git hooks installed successfully!${NC}"
+echo -e "${GREEN}════════════════════════════════════════════${NC}"
+echo
+echo "Active hooks:"
+echo "  • Conventional commit message validation"
+echo "  • Code formatting (Prettier, ESLint)"
+echo "  • Python linting (Ruff)"
+echo "  • Markdown linting"
+echo "  • Secret detection"
+echo "  • File checks (trailing whitespace, etc.)"
+echo
+echo -e "${BLUE}Usage:${NC}"
+echo "  Automatic:  Hooks run on 'git commit'"
+echo "  Manual:     pre-commit run --all-files"
+echo "  Update:     pre-commit autoupdate"
+echo "  Skip:       git commit --no-verify (not recommended)"
+echo
+echo -e "${GREEN}Setup complete!${NC}"
