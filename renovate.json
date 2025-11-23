@@ -26,7 +26,7 @@
       "matchManagers": ["npm"],
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps",
-      "matchPackagePatterns": ["^astro$", "^@astrojs/"]
+      "matchPackageNames": ["/^astro$/", "/^@astrojs//"]
     },
     {
       "description": "Automerge npm dev dependencies (patch and minor)",
