@@ -1,0 +1,67 @@
+# Project: cortex
+
+## Project Overview
+- **Type**: Web Application
+- **Tech Stack**: Node.js (Astro), TypeScript, Python
+- **Purpose**: Personal website and portfolio
+
+## Standardization Compliance
+
+**IMPORTANT**: This repository follows standardized configuration defined in:
+- **Parent Standards**: `../claude` (one folder up from this repository)
+
+When making changes to CI/CD, pre-commit hooks, or tooling in THIS repository:
+1. ✅ Read the parent `.claude` file first
+2. ✅ Check if this change should apply to other repositories
+3. ✅ Verify consistency across all 11 repositories in `/Users/williamchrisp/Documents/git/`
+4. ✅ Apply the same change to all affected repositories simultaneously
+
+## Repository-Specific Configuration
+
+### Technology Stack
+- **Node.js**: Astro framework for static site generation
+- **TypeScript**: Type-safe development
+- **Python**: Build scripts and utilities
+
+### Required Workflows
+- ✅ `ci.yml` - Lint, type-check, build, Python linting, npm audit
+- ✅ `commitlint.yml` - Commit message validation
+- ✅ `semantic-pr.yml` - PR title validation
+- ✅ `renovate.yml` - Dependency updates
+- ✅ `release.yml` - Semantic releases
+- ✅ `deploy.yml` - Automated deployment
+
+### Required Pre-commit Hooks
+Standard hooks from parent `.claude` PLUS:
+- ✅ `mirrors-prettier@v4.0.0-alpha.8` (with Astro plugin)
+- ✅ `mirrors-eslint@v10.0.0-alpha.0` (with TypeScript + Astro support)
+- ✅ `ruff-pre-commit@v0.14.6` (Python linting)
+
+### Security Requirements
+- ✅ detect-secrets with `.secrets.baseline`
+- ✅ npm audit in CI (moderate level)
+- ✅ Python dependency scanning with ruff
+
+### Project-Specific Notes
+- Uses `.nvmrc` for Node.js version pinning
+- Uses `.python-version` for Python version
+- ESLint configured for Astro files
+- Prettier has Astro plugin for .astro files
+
+## Cross-Repository Verification
+
+Before committing changes that affect:
+- Pre-commit hooks → Check: talos, proton-sieve, config, avolent.io, gamestack, pipelines, gcp, cv, macpac, goconfig
+- Node.js workflows → Check: gamestack
+- Python workflows → Check: gcp
+- General CI patterns → Check: ALL repositories
+
+## Exceptions from Standard
+- **Additional Python linting**: This repo has Python build scripts, so includes ruff
+- **Astro-specific tooling**: Prettier and ESLint have Astro plugins
+- **Security job**: Has dedicated npm audit job (not all Node projects have this yet)
+
+## Maintenance Reminders
+- Keep ESLint/Prettier versions in sync with package.json
+- Update Astro plugins when Astro framework updates
+- Check npm audit doesn't block CI for dev dependencies
