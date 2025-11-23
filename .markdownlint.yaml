@@ -1,0 +1,20 @@
+---
+# Markdownlint configuration
+# Documentation: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+default: true
+
+# Disable line-length rule (per user request - long lines are acceptable)
+MD013: false
+
+# Disable duplicate heading rule (long documentation may have duplicate section headings)
+MD024: false
+
+# Disable inline HTML rule (needed for placeholders like <your-domain>)
+MD033: false
+
+# Disable descriptive link text rule (terraform-docs generates "here" links)
+MD059: false
+
+# Disable table column style rule (table formatting style is cosmetic)
+MD060: false
