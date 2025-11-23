@@ -16,10 +16,18 @@ repos:
         args: ['--maxkb=1000']
       - id: check-merge-conflict
       - id: check-case-conflict
+      - id: detect-private-key
       - id: mixed-line-ending
         args: [--fix=lf]
       - id: no-commit-to-branch
         args: [--branch, main, --branch, master]
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.37.1
+    hooks:
+      - id: yamllint
+        args: [-c, .yamllint.yml]
 
   # Prettier for formatting
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -62,6 +70,14 @@ repos:
         files: \.md$
         exclude: node_modules|dist
 
+  # Check for secrets
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package-lock.json
+
   # Commit message linting
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
     rev: v9.23.0
@@ -69,5 +85,3 @@ repos:
       - id: commitlint
         stages: [commit-msg]
         additional_dependencies: ['@commitlint/config-conventional']
-
-        exclude: package-lock.json
