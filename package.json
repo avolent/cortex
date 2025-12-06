@@ -20,12 +20,12 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.11",
+    "@astrojs/mdx": "^4.3.12",
     "@astrojs/sitemap": "^3.6.0",
-    "astro": "^5.15.9"
+    "astro": "^5.16.4"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.5",
+    "@astrojs/check": "^0.9.6",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.47.0",

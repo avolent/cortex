@@ -24,6 +24,5 @@ Notes may include information and tips from other peoples guides. This will be r
    1. [Setting up pfSense](/homelab/setting%20up%20pfsense)
 3. Tools
    1. [Setting up git with extra tips and tricks](/tools/setup%20git%20with%20extra%20tips%20and%20tricks)
-   2. [Setup VSCode for LaTeX](/tools/setup%20vscode%20for%20latex)
 4. Programming
    1. [Setup for Python development](/programming/python%20development%20setup)
