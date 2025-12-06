@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/avolent/cortex/compare/v1.0.2...v1.0.3) (2025-12-06)
+
+
+### Bug Fixes
+
+* **git:** add more github page information ([#7](https://github.com/avolent/cortex/issues/7)) ([be91699](https://github.com/avolent/cortex/commit/be91699772ce853cf7989f7d65f5050bb08211d5))
+
 ## [1.0.2](https://github.com/avolent/cortex/compare/v1.0.1...v1.0.2) (2025-11-22)
 
 
