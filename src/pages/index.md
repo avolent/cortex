@@ -2,7 +2,7 @@
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Cortex Wiki
-date: May 2024
+date: December 2025
 publish: 'true'
 ---
 

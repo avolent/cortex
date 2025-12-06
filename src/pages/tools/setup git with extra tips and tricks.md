@@ -2,7 +2,7 @@
 layout: /src/layouts/BaseLayout.astro
 author: avolent
 title: Setup git with extra tips and tricks
-date: May 2024
+date: December 2025
 publish: 'true'
 ---
 
