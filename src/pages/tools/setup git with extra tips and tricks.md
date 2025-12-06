@@ -58,7 +58,7 @@ Copy the contents of your key and add to your github account under - [New SSH Ke
 cat ~/.ssh/key_name.pub
 ```
 
-![add_ssh_key.png](/images/tools/git/add_ssh_key.png)
+![add_ssh_key.png](/images/tools/setup%20git%20with%20extra%20tips%20and%20tricks/add_ssh_key.png)
 
 **You can test your connection with the following:**
 
