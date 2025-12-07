@@ -1,0 +1,75 @@
+name: AI Issue Triage and Summary
+
+on:
+  issues:
+    types: [opened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  process-issue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      models: read
+      issues: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Analyze and label issue
+        id: analyze
+        uses: actions/ai-inference@v2
+        with:
+          prompt: |
+            Analyze this GitHub issue and suggest appropriate labels:
+
+            Title: ${{ github.event.issue.title }}
+            Body: ${{ github.event.issue.body }}
+
+            Available labels:
+            - bug, enhancement, documentation
+            - frontend, backend, dependencies
+            - priority-high, priority-medium, priority-low
+            - good-first-issue, help-wanted
+
+            Respond with only the label names, comma-separated.
+
+      - name: Apply labels
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const labels = '${{ steps.analyze.outputs.response }}'.split(',').map(l => l.trim());
+            await github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: labels
+            });
+
+      - name: Summarize issue
+        id: summarize
+        uses: actions/ai-inference@v2
+        with:
+          prompt: |
+            Summarize the following GitHub issue in one paragraph:
+            Title: ${{ github.event.issue.title }}
+            Body: ${{ github.event.issue.body }}
+
+            Keep it concise and focus on the key problem and any proposed solution.
+
+      - name: Comment with AI summary
+        run: |
+          gh issue comment $ISSUE_NUMBER --body "## 🤖 AI Summary
+
+          ${{ steps.summarize.outputs.response }}
+
+          ---
+          *Applied labels: ${{ steps.analyze.outputs.response }}*"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}

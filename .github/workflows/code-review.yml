@@ -1,0 +1,152 @@
+name: Code Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      models: read
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files and commits
+        id: changed-files
+        run: |
+          FILES=$(git diff --name-only origin/main...HEAD | grep -E '\.(js|ts|tsx|jsx|json|md)$' | head -10)
+          if [ -z "$FILES" ]; then
+            FILES="No relevant files changed."
+          fi
+          COMMITS=$(git log origin/main..HEAD --pretty=format:"%s" | head -5)
+          if [ -z "$COMMITS" ]; then
+            COMMITS="No new commits."
+          fi
+          EOF_FILES=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "files<<$EOF_FILES" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "$EOF_FILES" >> $GITHUB_OUTPUT
+          EOF_COMMITS=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "commits<<$EOF_COMMITS" >> $GITHUB_OUTPUT
+          echo "$COMMITS" >> $GITHUB_OUTPUT
+          echo "$EOF_COMMITS" >> $GITHUB_OUTPUT
+
+      - name: AI Code Review
+        id: review
+        uses: actions/ai-inference@v2
+        with:
+          prompt: |
+            Review these code changes for best practices and code quality.
+
+            Files changed: ${{ steps.changed-files.outputs.files }}
+            Recent commits: ${{ steps.changed-files.outputs.commits }}
+
+            Focus on:
+            - Code quality: Structure, naming, documentation
+            - Security: Input validation, dependency security
+            - Best practices: Error handling, testing
+
+            Provide specific, actionable feedback.
+
+      - name: AI PR Title and Body Suggestion
+        id: title_and_body
+        uses: actions/ai-inference@v2
+        with:
+          prompt: |
+            Based on these commits and file changes, suggest a conventional commit title and a detailed body for this PR.
+
+            Commits: ${{ steps.changed-files.outputs.commits }}
+            Files changed: ${{ steps.changed-files.outputs.files }}
+
+            Format your response like this, with [TITLE] and [BODY] markers:
+            [TITLE]
+            type(scope): description
+            [BODY]
+            - A detailed summary of the changes.
+            - Explain the reasoning behind the changes.
+            - Mention which files are most affected.
+
+      - name: Update PR Title, Description and Comment
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const suggestion = process.env.SUGGESTED_TITLE_AND_BODY;
+            const reviewResponse = process.env.REVIEW_RESPONSE;
+
+            const titleIndex = suggestion.indexOf('[TITLE]');
+            const bodyIndex = suggestion.indexOf('[BODY]');
+
+            let suggestedTitle = 'AI Suggested Title';
+            let suggestedBody = ''; // Default to empty
+
+            if (titleIndex !== -1) {
+                const titleEnd = (bodyIndex !== -1) ? bodyIndex : suggestion.length;
+                suggestedTitle = suggestion.substring(titleIndex + '[TITLE]'.length, titleEnd).trim();
+            }
+
+            if (bodyIndex !== -1) {
+                suggestedBody = suggestion.substring(bodyIndex + '[BODY]'.length).trim();
+            }
+
+            if (!suggestedBody) {
+                suggestedBody = 'AI was unable to generate a summary for this pull request.';
+            }
+
+            // 1. Update PR Title and Body
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              title: suggestedTitle,
+              body: suggestedBody
+            });
+            console.log('Updated PR title and description.');
+
+            // 2. Post review as a comment
+            const reviewCommentBody = `## AI Code Review\n\n${reviewResponse}`;
+
+            // Find existing comment from this bot
+            const { data: comments } = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('## AI Code Review')
+            );
+
+            // Update existing comment or create new one
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: reviewCommentBody
+              });
+              console.log('Updated existing review comment');
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: reviewCommentBody
+              });
+              console.log('Created new review comment');
+            }
+        env:
+          REVIEW_RESPONSE: ${{ steps.review.outputs.response }}
+          SUGGESTED_TITLE_AND_BODY: ${{ steps.title_and_body.outputs.response }}
