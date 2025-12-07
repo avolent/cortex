@@ -8,14 +8,14 @@ This document outlines recommended GitHub repository settings for optimal automa
 
 **Option A: GitHub App (Recommended)**
 
-1. Go to https://github.com/apps/renovate
+1. Go to <https://github.com/apps/renovate>
 2. Click "Install"
 3. Select your repository
 4. Renovate will automatically detect `renovate.json` and start creating PRs
 
 **Option B: Self-hosted**
 
-- Follow instructions at https://docs.renovatebot.com/getting-started/running/
+- Follow instructions at <https://docs.renovatebot.com/getting-started/running/>
 
 ### 2. Branch Protection Rules
 
@@ -148,9 +148,9 @@ git push origin test/ci-check
 
 **Dashboard access:**
 
-- Actions: https://github.com/avolent/cortex/actions
-- Security: https://github.com/avolent/cortex/security
-- Insights: https://github.com/avolent/cortex/pulse
+- Actions: <https://github.com/avolent/cortex/actions>
+- Security: <https://github.com/avolent/cortex/security>
+- Insights: <https://github.com/avolent/cortex/pulse>
 
 ## Troubleshooting
 

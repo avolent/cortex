@@ -32,7 +32,7 @@ The following page goes over how I configure my pfSense at home and what steps i
 
 ## Default Pfsense Login
 
-**Username:** admin  
+**Username:** admin
 **Password:** pfsense
 
 ## Initial Setup
@@ -41,25 +41,25 @@ Useful video for setup of pfsense and basic settings. [^3]
 
 ### 1. [/System/Advanced/Admin Access](https://192.168.1.1/system_advanced_admin.php)
 
-Enable **Display page name first in browser tab**.  
+Enable **Display page name first in browser tab**.
 Enable **Secure Shell** if required.
 
 ### 2. [/Advanced/Firewall & NAT](https://192.168.1.1/system_advanced_admin.php)
 
-Update **Firewall Maximum Table Entries** to 10,000,000.  
+Update **Firewall Maximum Table Entries** to 10,000,000.
 Enable **IP Random id generation**.
 
 ### 3. [/Advanced/Misc](https://192.168.1.1/system_advanced_misc.php)
 
-Enable **PowerD**.  
-Enable **Cryptographic Hardware**.  
-Enable **Thermal Sensors**.  
+Enable **PowerD**.
+Enable **Cryptographic Hardware**.
+Enable **Thermal Sensors**.
 Enable **Do NOT send Netgate Device ID with user agent**.
 
 ### 4. [/System/General Setup](https://192.168.1.1/system.php)
 
-**Theme** = pfsense Dark.  
-**Top Navigation** = Fixed.  
+**Theme** = pfsense Dark.
+**Top Navigation** = Fixed.
 **Dashboard Columns** = 3.
 
 ### 5. [/System/Package Manager/Available Packages](https://192.168.1.1/pkg_mgr.php)
@@ -73,23 +73,23 @@ pfblockerng-devel (Important)
 
 ### 6. [/System/User Manager/Users](https://192.168.1.1/system_usermanager.php)
 
-Add a new local user and attach them to the administrator group.  
+Add a new local user and attach them to the administrator group.
 Log out and log into the new user.
 
 ### 8. [/Interfaces/WAN](https://192.168.1.1/interfaces.php?if=wan)
 
-Changing port assignments can be done in [/Interfaces/Assignments](https://192.168.1.1/interfaces_assign.php).  
-Most things are fine as default in here.  
+Changing port assignments can be done in [/Interfaces/Assignments](https://192.168.1.1/interfaces_assign.php).
+Most things are fine as default in here.
 If you need/want IPV6 change **DHCPv6 Prefix Delegation size** to the size your internet provider has given you.
 
 ### 7. [/Services/DHCP Server/LAN](https://192.168.1.1/services_dhcp.php)
 
-Enable **Change DHCP display lease time from UTC to local time** (Do the same for IPv6).  
+Enable **Change DHCP display lease time from UTC to local time** (Do the same for IPv6).
 Assign your **Static IP** addresses.
 
 ### 8. [/Services/DNS Resolver/General Settings](https://192.168.1.1/services_unbound.php)
 
-Enable **DNSSEC** Support.  
+Enable **DNSSEC** Support.
 Enable **Python Module** (Leave the settings default) _If you want regex blocking_.
 
 ### 9. [/Services/Dynamic DNS/Dynamic DNS Clients](https://192.168.1.1/services_dyndns.php)
@@ -102,15 +102,15 @@ Create a Cloudflare ddns client.
 
 ### 11. [/Firewall/pfBlockerNG/IP](https://192.168.1.1/pfblockerng/pfblockerng_ip.php) - Make Sure You Force Reload at the End to save Changes
 
-Enable **Floating Rules**.  
-Enable **Kill States**.  
+Enable **Floating Rules**.
+Enable **Kill States**.
 Add **MaxMind License Key**.
 
 ### 12. [/Firewall/pfBlockerNG/DNSBL](https://192.168.1.1/pfblockerng/pfblockerng_dnsbl.php)
 
-**DNSBL Mode** = Unbound Python Mode _If you want regex blocking_.  
-**Regex Blocking** = Enable.  
-**DNSBL IPs - List Action** = Deny Both.  
+**DNSBL Mode** = Unbound Python Mode _If you want regex blocking_.
+**Regex Blocking** = Enable.
+**DNSBL IPs - List Action** = Deny Both.
 Add all your feeds and enable them.
 
 MAKE SURE YOU **UPDATE/RELOAD ALL** TO MAKE SURE CHANGES ARE ACTIVE!!
@@ -134,7 +134,7 @@ Firebog_Advertising
 
 ## UPNP
 
-Configuring the following is great for devices which have strict NAT type when playing games.  
+Configuring the following is great for devices which have strict NAT type when playing games.
 Device used in this example is a **Nintendo Switch** [^1].
 
 ### 1. [/Services/DHCP Server/LAN](https://192.168.1.1/services_dhcp.php)
@@ -143,26 +143,26 @@ Assign device a static IP.
 
 ### 2. [/Services/UPnP & NAT-PMP](https://192.168.1.1/pkg_edit.php?xml=miniupnpd.xml&id=0)
 
-Enable the following:  
-**UPnP & NAT-PMP**  
-**Allow UPnP Port Mapping**  
-**Allow NAT-PMP Port Mapping**  
-**Log packets handled by UPnP & NAT-PMP rules.**  
+Enable the following:
+**UPnP & NAT-PMP**
+**Allow UPnP Port Mapping**
+**Allow NAT-PMP Port Mapping**
+**Log packets handled by UPnP & NAT-PMP rules.**
 **Deny access to UPnP & NAT-PMP by default.**
 
-Within **ACL Entries** add the device configured with the static IP like so.  
+Within **ACL Entries** add the device configured with the static IP like so.
 `allow 53-65535 192.168.1.246/32 53-65535`
 
 ### 3. [/Firewall/NAT/Outbound](https://192.168.1.1/firewall_nat_out.php)
 
-Configure your Outbound NAT mode to **Hybrid**  
-Add the following rule.  
-**Interface:** WAN  
-**Address Family:** IPv4 + IPv6 (IPv4 only if IPv6 not enabled)  
-**Protocol:** Any  
-**Source:** Network | deviceip/32 | no port range  
-**Destination:** Any  
-**Translation Address:** Interface Address  
+Configure your Outbound NAT mode to **Hybrid**
+Add the following rule.
+**Interface:** WAN
+**Address Family:** IPv4 + IPv6 (IPv4 only if IPv6 not enabled)
+**Protocol:** Any
+**Source:** Network | deviceip/32 | no port range
+**Destination:** Any
+**Translation Address:** Interface Address
 **Translation Port or Range:** Empty | Check the static box
 
 Then add a **description** to this rule.
@@ -175,15 +175,15 @@ Port forward so that you can host games on your internal network and share with 
 
 ### 1. [/Firewall/NAT/Port Forward](https://192.168.1.1/firewall_nat.php)
 
-Add a rule for a port you would like to forward.  
-**Interface:** WAN  
-**Address Family:** IPv4 (Unless you need IPv6)  
-**Protocol:** TCP / UDP or Both  
-**Destination:** WAN  
-**Destination Port Range:** Either a single port or a range. (This is the external port that will be connected too.)  
-**Redirect IP:** The device IP hosting the server.  
-**Redirect Target Port:** This is the port in which your server is using. (Multiple rules required for multiple ports.  
-**Description:** Description for the rule.  
+Add a rule for a port you would like to forward.
+**Interface:** WAN
+**Address Family:** IPv4 (Unless you need IPv6)
+**Protocol:** TCP / UDP or Both
+**Destination:** WAN
+**Destination Port Range:** Either a single port or a range. (This is the external port that will be connected too.)
+**Redirect IP:** The device IP hosting the server.
+**Redirect Target Port:** This is the port in which your server is using. (Multiple rules required for multiple ports.
+**Description:** Description for the rule.
 **Filter rule association:** Add associated filter rule.
 
 Save the rule.
@@ -192,12 +192,12 @@ Save the rule.
 
 ## Buffer Bloat
 
-todo  
+todo
 [^2]
 
 ## Wireguard
 
-todo  
+todo
 [^5]
 
 ## VLANs

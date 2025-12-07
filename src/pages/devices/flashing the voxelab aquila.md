@@ -40,13 +40,13 @@ Important Sticky Note to read before starting [here](https://www.reddit.com/r/Vo
 
 Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explanation_on_aquila_chips_from_voxelab_team/)
 
-- Simple method  
-   Confirm whether you printer has a sticker on it with the model of chip.  
-  ![chip.jpg](/images/devices/flashing%20the%20voxelab%20aquila/chip.jpg)  
+- Simple method
+  Confirm whether you printer has a sticker on it with the model of chip.
+  ![chip.jpg](/images/devices/flashing%20the%20voxelab%20aquila/chip.jpg)
   If your printer does not have a sticker, it is most likely the G32 or N32
 
-- Effort Required  
-  Open the bottom of your printer and confirm by looking at the model number on the chip.  
+- Effort Required
+  Open the bottom of your printer and confirm by looking at the model number on the chip.
   ![chip_onboard.jpeg](/images/devices/flashing%20the%20voxelab%20aquila/chip_onboard.jpeg)
 
 #### Download Custom Firmware
@@ -55,16 +55,16 @@ Explanation [here](https://www.reddit.com/r/VoxelabAquila/comments/ph1a7u/explan
 
 **Types of version**
 
-- **<u>Bed Leveling Type</u>**  
-  BLTouch: Auto Bed Leveling.  
-  Default: No Auto Bed Leveling.  
-  Manual Mesh: Manual Bed Leveling, configure your own mesh.  
+- **<u>Bed Leveling Type</u>**
+  BLTouch: Auto Bed Leveling.
+  Default: No Auto Bed Leveling.
+  Manual Mesh: Manual Bed Leveling, configure your own mesh.
   UBL: Unified Bed Leveling.
-- **<u>Mesh Size</u>**  
-  3x3: 3 points by 3 points mesh.  
-  4x4: 4 points by 4 points mesh.  
+- **<u>Mesh Size</u>**
+  3x3: 3 points by 3 points mesh.
+  4x4: 4 points by 4 points mesh.
   and so on..
-- **<u>Chip Model</u>**  
+- **<u>Chip Model</u>**
   G32 or N32: Determined earlier
 
 - Also download the source code .zip file as well.
@@ -86,7 +86,7 @@ Open up windows explorer and format your SD card with the following settings
 - Extract the source code zip file.
 - Go into the path "/Display Firmware/Firmware Sets". The folder set you can now see are basically the theme for the display. Pick one you like, copy it to your desktop and then rename it to just "DWIN_SET" (All capitals).
 - Now for the .bin file you downloaded earlier, Make a new folder and name it "firmware" (All lowercase) and move it inside.
-- Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.  
+- Move both folders "firmware" and "DWIN_SET" to your freshly formatted SD Card.
   End result should look something like this
 
 ![sd_folders](/images/devices/flashing%20the%20voxelab%20aquila/sd_folders.png)
@@ -96,7 +96,7 @@ Open up windows explorer and format your SD card with the following settings
 - Make sure printer is off.
 - Place SD card into Machine
 - Turn on the printer
-- Watch the screen and look for a loading bar. It will give you a check mark once complete.  
+- Watch the screen and look for a loading bar. It will give you a check mark once complete.
   _The screen will look really messy after flashing the mobo, this is normal as we haven't flashed the display yet._
 
 ### Flashing the Display

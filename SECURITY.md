@@ -45,6 +45,7 @@ The site currently loads CSS from an external CDN without SRI hashes:
    ```
 
 2. **Update the link tag** in `src/layouts/BaseLayout.astro`:
+
    ```html
    <link
      rel="stylesheet"
