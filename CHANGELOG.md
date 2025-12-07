@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/avolent/cortex/compare/v1.0.4...v1.1.0) (2025-12-07)
+
+
+### Features
+
+* **ci:** add AI-powered code review and issue triage workflows ([261378b](https://github.com/avolent/cortex/commit/261378b8cba08d5930dcee3c06f83de8d03de206))
+
 ## [1.0.4](https://github.com/avolent/cortex/compare/v1.0.3...v1.0.4) (2025-12-06)
 
 
