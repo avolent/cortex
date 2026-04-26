@@ -67,43 +67,117 @@ const tmplStr = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='none' stroke='%23888' stroke-width='2'/%3E%3C/svg%3E">
 <title>{{.Title}}</title>
 <style>
-  :root { --bg:#fff; --fg:#1a1a1a; --muted:#666; --border:#e5e5e5; --hover:#f0f0f0; --active:#0070f3; --code-bg:#f5f5f5; }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg:#1a1a1a; --fg:#e5e5e5; --muted:#999; --border:#333; --hover:#2a2a2a; --active:#3b82f6; --code-bg:#2a2a2a; }
+  :root {
+    --bg: #fdfdfc; --fg: #1a1a1a; --muted: #5a5a5a;
+    --border: #e3e3e0; --code-bg: #f4f3f0; --hover: rgba(0,0,0,0.05);
+    --link: #0a4ea3;
   }
-  *{box-sizing:border-box}
-  body{font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;display:flex;background:var(--bg);color:var(--fg)}
-  nav{width:280px;padding:1rem;height:100vh;overflow-y:auto;border-right:1px solid var(--border);flex-shrink:0}
-  nav a{display:block;padding:.25rem .5rem;color:var(--fg);text-decoration:none;border-radius:4px;font-size:14px}
-  nav a:hover{background:var(--hover)}
-  nav a.active{background:var(--active);color:#fff}
-  nav details{margin:.25rem 0}
-  nav summary{cursor:pointer;padding:.25rem .5rem;font-size:14px;font-weight:600;border-radius:4px}
-  nav summary:hover{background:var(--hover)}
-  nav details > *:not(summary){margin-left:.75rem;padding-left:.5rem;border-left:1px solid var(--border)}
-  main{padding:2rem 3rem;overflow-y:auto;height:100vh;flex:1}
-  main > article{max-width:860px;margin:0 auto}
-  main h1,main h2,main h3,main h4{margin-top:2rem;line-height:1.3}
-  main h1:first-child{margin-top:0}
-  main pre{background:var(--code-bg);padding:1rem;border-radius:6px;overflow-x:auto;font-size:14px}
-  main code{background:var(--code-bg);padding:.15rem .35rem;border-radius:3px;font-size:.9em}
-  main pre code{background:none;padding:0}
-  main table{border-collapse:collapse;margin:1rem 0}
-  main td,main th{border:1px solid var(--border);padding:.5rem .75rem}
-  main blockquote{border-left:3px solid var(--border);margin:0;padding:.5rem 1rem;color:var(--muted)}
-  main a{color:var(--active)}
-  main img{max-width:100%}
-  @media (max-width: 768px){
-    body{flex-direction:column}
-    nav{width:100%;height:auto;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}
-    main{height:auto;padding:1.5rem}
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a; --fg: #e6e6e6; --muted: #9a9a9a;
+      --border: #2c2c2c; --code-bg: #232323; --hover: rgba(255,255,255,0.06);
+      --link: #6db0ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    color: var(--fg); background: var(--bg);
+    font: 18px/1.7 XCharter, Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    padding-left: 280px;
+  }
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; height: 100vh;
+    padding: 1.5rem 1.25rem; overflow-y: auto;
+    border-right: 1px solid var(--border);
+    font-size: 0.95rem; line-height: 1.5;
+  }
+  nav.sidebar a, nav.sidebar summary {
+    display: block; padding: .2rem .5rem;
+    color: inherit; text-decoration: none;
+    border-radius: 3px;
+  }
+  nav.sidebar a:hover, nav.sidebar summary:hover { background: var(--hover); }
+  nav.sidebar a.active { font-weight: 700; }
+  nav.sidebar summary { cursor: pointer; font-weight: 600; }
+  nav.sidebar details { margin: .25rem 0; }
+  nav.sidebar details > *:not(summary) {
+    margin-left: .6rem; padding-left: .6rem;
+    border-left: 1px solid var(--border);
+  }
+  main {
+    max-width: clamp(65ch, calc(100vw - 280px - 6rem), 90ch);
+    margin: 0 auto; padding: 3rem 2rem 4rem;
+  }
+  article h1, article h2, article h3, article h4, article h5, article h6 { line-height: 1.25; margin: 2.5rem 0 1rem; }
+  article h1 { font-size: 2rem; margin-top: 0; text-align: center; }
+  article h2 { font-size: 1.5rem; }
+  article h3 { font-size: 1.2rem; }
+  article h4 { font-size: 1.05rem; }
+  article h5 { font-size: 1rem; font-weight: 700; }
+  article h6 { font-size: 1rem; font-weight: 700; color: var(--muted); }
+  article p { margin: 0 0 1rem; }
+  article a { color: var(--link); }
+  article ul, article ol { margin: 0 0 1rem; padding-left: 1.5rem; }
+  article li { margin: .25rem 0; }
+  article li > ul, article li > ol { margin-bottom: 0; }
+  article dl { margin: 0 0 1rem; }
+  article dt { font-weight: 700; margin-top: .5rem; }
+  article dd { margin: 0 0 .5rem 1.5rem; }
+  article code, article pre {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  article code {
+    font-size: .9em;
+    background: var(--code-bg); padding: .15em .4em; border-radius: 0.25em;
+    vertical-align: -0.05em;
+    overflow-wrap: anywhere;
+  }
+  article pre {
+    border-left: 3px solid var(--border);
+    padding: .5rem 1rem; margin: 1rem 0;
+    overflow-x: auto;
+    font-size: .9em; line-height: 1.5;
+  }
+  article pre code {
+    background: none; padding: 0; font-size: 1em;
+    vertical-align: baseline; overflow-wrap: normal;
+  }
+  article blockquote {
+    border-left: 3px solid var(--border);
+    margin: 1rem 0; padding: .25rem 1rem;
+    color: var(--muted);
+  }
+  article table { border-collapse: collapse; margin: 1rem 0; }
+  article th, article td { border: 1px solid var(--border); padding: .5rem .75rem; }
+  article th { background: var(--code-bg); }
+  article img { max-width: 100%; height: auto; }
+  article hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+  article sup.footnote-ref { font-size: .75em; }
+  article sup.footnote-ref a { text-decoration: none; }
+  article .footnotes { margin-top: 3rem; font-size: .9em; color: var(--muted); }
+  article .footnotes hr { margin-bottom: .5rem; }
+  article .footnotes li { margin: .35rem 0; }
+  article .footnotes li p { margin: 0; }
+  @media (max-width: 768px) {
+    body { padding-left: 0; }
+    nav.sidebar {
+      position: static; width: 100%; height: auto;
+      max-height: 40vh; border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    main { padding: 2rem 1.25rem 3rem; }
+    article h1 { font-size: 1.75rem; }
   }
 </style>
 </head>
 <body>
-<nav>{{template "nav" .Nav}}</nav>
+<nav class="sidebar">{{template "nav" .Nav}}</nav>
 <main><article>{{.Content}}</article></main>
 {{if .Reload}}<script>(()=>{const es=new EventSource('/_cortex/events');es.onmessage=()=>location.reload();es.onerror=()=>{};})();</script>{{end}}
 </body>
@@ -324,7 +398,7 @@ func rewriteMdLinks(in []byte) []byte {
 }
 
 func renderMarkdown(md []byte) template.HTML {
-	p := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs)
+	p := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs | parser.Footnotes)
 	r := html.NewRenderer(html.RendererOptions{Flags: html.CommonFlags})
 	return template.HTML(rewriteMdLinks(markdown.Render(p.Parse(md), r)))
 }

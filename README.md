@@ -5,7 +5,7 @@ Tiny Go binary that turns any folder of markdown into a navigable wiki. Point it
 ## Install
 
 ```bash
-go install cortex.wiki@latest
+go install github.com/avolent/cortex@latest
 ```
 
 Or build from source:

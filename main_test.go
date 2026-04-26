@@ -1,11 +1,36 @@
 package main
 
 import (
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 )
+
+// withRoot runs fn with *rootDir temporarily set, then restores it.
+// All filesystem-touching tests share this helper since *rootDir is global.
+func withRoot(t *testing.T, dir string, fn func()) {
+	t.Helper()
+	old := *rootDir
+	*rootDir = dir
+	defer func() { *rootDir = old }()
+	fn()
+}
+
+// writeTree creates files (with parent dirs) under root for fixture setup.
+func writeTree(t *testing.T, root string, files map[string]string) {
+	t.Helper()
+	for name, content := range files {
+		full := filepath.Join(root, name)
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(full, []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
 
 func TestUrlForFile(t *testing.T) {
 	cases := map[string]string{
@@ -114,34 +139,107 @@ func TestRewriteMdLinks(t *testing.T) {
 	}
 }
 
+func TestResolveMarkdown(t *testing.T) {
+	tmp := t.TempDir()
+	writeTree(t, tmp, map[string]string{
+		"README.md":         "x",
+		"page.md":           "x",
+		"TODO.MD":           "x",
+		"sub/README.md":     "x",
+		"sub/article.md":    "x",
+		".hidden/secret.md": "x",
+	})
+
+	cases := map[string]string{
+		"/":               "README.md",
+		"/page":           "page.md",
+		"/page.md":        "page.md",
+		"/sub":            "sub/README.md",
+		"/sub/article":    "sub/article.md",
+		"/missing":        "",
+		"/.hidden/secret": "", // dotdir is skipped
+	}
+	withRoot(t, tmp, func() {
+		for url, want := range cases {
+			got := resolveMarkdown(url)
+			want = filepath.FromSlash(want)
+			if got != want {
+				t.Errorf("resolveMarkdown(%q) = %q, want %q", url, got, want)
+			}
+		}
+		// Case-insensitive stem fallback: assert resolution succeeds without
+		// pinning the exact on-disk casing returned, since case-sensitive
+		// filesystems (Linux ext4) and case-insensitive ones (macOS APFS)
+		// reach the matching file via different code paths.
+		if got := resolveMarkdown("/TODO"); got == "" {
+			t.Errorf("resolveMarkdown(/TODO) = \"\", want TODO.MD or TODO.md")
+		}
+	})
+}
+
+func TestHandler(t *testing.T) {
+	tmp := t.TempDir()
+	writeTree(t, tmp, map[string]string{
+		"README.md":     "# Home\n",
+		"page.md":       "# Page\n",
+		"sub/README.md": "# Sub\n",
+		"img.png":       "PNGBYTES",
+		".git/config":   "secret",
+	})
+
+	cases := []struct {
+		name, path string
+		wantCode   int
+		wantSub    string // substring check on body when non-empty
+	}{
+		{"root", "/", 200, "<title>README</title>"},
+		{"page", "/page", 200, "<title>page</title>"},
+		{"page-with-md-suffix", "/page.md", 200, "<title>page</title>"},
+		{"subdir-readme", "/sub", 200, "<title>README</title>"},
+		{"image", "/img.png", 200, "PNGBYTES"},
+		{"missing", "/nope", 404, ""},
+		// Path traversal: path.Clean collapses these; defence in depth.
+		{"traversal-shallow", "/../etc/passwd", 404, ""},
+		{"traversal-deep", "/a/../../../etc/passwd", 404, ""},
+		// Skipped paths must not be served even if they exist.
+		{"hidden-dotdir", "/.git/config", 404, ""},
+	}
+	withRoot(t, tmp, func() {
+		for _, tc := range cases {
+			t.Run(tc.name, func(t *testing.T) {
+				req := httptest.NewRequest("GET", tc.path, nil)
+				rec := httptest.NewRecorder()
+				handler(rec, req)
+				if rec.Code != tc.wantCode {
+					t.Errorf("status = %d, want %d; body = %s", rec.Code, tc.wantCode, rec.Body.String())
+				}
+				if tc.wantSub != "" && !strings.Contains(rec.Body.String(), tc.wantSub) {
+					t.Errorf("body missing %q", tc.wantSub)
+				}
+			})
+		}
+	})
+}
+
 func TestExportSite(t *testing.T) {
 	tmp := t.TempDir()
 	src := filepath.Join(tmp, "src")
 	out := filepath.Join(tmp, "out")
 
-	files := map[string]string{
+	writeTree(t, src, map[string]string{
 		"README.md":       "# Home\n\n[page](page.md)\n[sub home](sub/README.md)\n",
 		"page.md":         "# Page\n",
 		"sub/README.md":   "# Sub\n",
 		"sub/article.md":  "# Article\n",
 		"img/diagram.png": "fakepngbytes",
-	}
-	for name, content := range files {
-		full := filepath.Join(src, name)
-		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
-			t.Fatal(err)
-		}
-		if err := os.WriteFile(full, []byte(content), 0o644); err != nil {
-			t.Fatal(err)
-		}
-	}
+	})
 
-	oldRoot := *rootDir
-	*rootDir = src
-	defer func() { *rootDir = oldRoot }()
-
-	if err := exportSite(out); err != nil {
-		t.Fatalf("exportSite: %v", err)
+	var exportErr error
+	withRoot(t, src, func() {
+		exportErr = exportSite(out)
+	})
+	if exportErr != nil {
+		t.Fatalf("exportSite: %v", exportErr)
 	}
 
 	expectFiles := []string{

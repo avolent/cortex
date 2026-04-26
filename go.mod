@@ -1,4 +1,4 @@
-module cortex.wiki
+module github.com/avolent/cortex
 
 go 1.26.2
 
