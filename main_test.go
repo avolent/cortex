@@ -1,0 +1,184 @@
+package main
+
+import (
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
+
+func TestUrlForFile(t *testing.T) {
+	cases := map[string]string{
+		"README.md":       "/",
+		"readme.md":       "/",
+		"foo.md":          "/foo",
+		"foo/bar.md":      "/foo/bar",
+		"foo/README.md":   "/foo",
+		"foo/readme.md":   "/foo",
+		"a/b/c/README.md": "/a/b/c",
+	}
+	for in, want := range cases {
+		if got := urlForFile(in); got != want {
+			t.Errorf("urlForFile(%q) = %q, want %q", in, got, want)
+		}
+	}
+}
+
+func TestOutPathForURL(t *testing.T) {
+	cases := []struct{ url, want string }{
+		{"/", filepath.Join("out", "index.html")},
+		{"/foo", filepath.Join("out", "foo", "index.html")},
+		{"/foo/bar", filepath.Join("out", "foo", "bar", "index.html")},
+	}
+	for _, tc := range cases {
+		if got := outPathForURL("out", tc.url); got != tc.want {
+			t.Errorf("outPathForURL(%q) = %q, want %q", tc.url, got, tc.want)
+		}
+	}
+}
+
+func TestIsSkipped(t *testing.T) {
+	cases := map[string]bool{
+		"foo":           false,
+		"foo/bar":       false,
+		".":             false,
+		".git":          true,
+		"node_modules":  true,
+		"foo/.hidden":   true,
+		"foo/.git/x.md": true,
+		".dotfile":      true,
+	}
+	for in, want := range cases {
+		if got := isSkipped(in); got != want {
+			t.Errorf("isSkipped(%q) = %v, want %v", in, got, want)
+		}
+	}
+}
+
+func TestTitleForFile(t *testing.T) {
+	cases := map[string]string{
+		"README.md":      "README",
+		"foo.md":         "foo",
+		"foo/bar.md":     "bar",
+		"foo/README.md":  "README",
+		"a/b/c/notes.md": "notes",
+	}
+	for in, want := range cases {
+		if got := titleForFile(in); got != want {
+			t.Errorf("titleForFile(%q) = %q, want %q", in, got, want)
+		}
+	}
+}
+
+func TestRewriteMdLinks(t *testing.T) {
+	cases := []struct{ in, want string }{
+		// Internal .md links get rewritten.
+		{`<a href="other.md">x</a>`, `<a href="other/">x</a>`},
+		{`<a href="dir/page.md">x</a>`, `<a href="dir/page/">x</a>`},
+		{`<a href="../foo.md">x</a>`, `<a href="../foo/">x</a>`},
+
+		// README.md collapses to its parent dir.
+		{`<a href="README.md">x</a>`, `<a href="./">x</a>`},
+		{`<a href="dir/README.md">x</a>`, `<a href="dir/">x</a>`},
+		{`<a href="../README.md">x</a>`, `<a href="../">x</a>`},
+
+		// Fragments and queries preserved.
+		{`<a href="other.md#section">x</a>`, `<a href="other/#section">x</a>`},
+		{`<a href="other.md?q=1">x</a>`, `<a href="other/?q=1">x</a>`},
+		{`<a href="dir/README.md#x">y</a>`, `<a href="dir/#x">y</a>`},
+
+		// Case-insensitive on .md extension.
+		{`<a href="other.MD">x</a>`, `<a href="other/">x</a>`},
+
+		// External URLs left alone.
+		{`<a href="https://example.com/x.md">x</a>`, `<a href="https://example.com/x.md">x</a>`},
+		{`<a href="http://example.com/x.md">x</a>`, `<a href="http://example.com/x.md">x</a>`},
+		{`<a href="//example.com/x.md">x</a>`, `<a href="//example.com/x.md">x</a>`},
+		{`<a href="mailto:x@example.com">x</a>`, `<a href="mailto:x@example.com">x</a>`},
+
+		// Anchor-only links left alone.
+		{`<a href="#section">x</a>`, `<a href="#section">x</a>`},
+
+		// Non-.md hrefs left alone.
+		{`<a href="other.html">x</a>`, `<a href="other.html">x</a>`},
+		{`<a href="other">x</a>`, `<a href="other">x</a>`},
+
+		// Image src untouched (rarely .md, but covered for completeness).
+		{`<img src="img.png">`, `<img src="img.png">`},
+	}
+	for _, tc := range cases {
+		got := string(rewriteMdLinks([]byte(tc.in)))
+		if got != tc.want {
+			t.Errorf("rewriteMdLinks(%q) = %q, want %q", tc.in, got, tc.want)
+		}
+	}
+}
+
+func TestExportSite(t *testing.T) {
+	tmp := t.TempDir()
+	src := filepath.Join(tmp, "src")
+	out := filepath.Join(tmp, "out")
+
+	files := map[string]string{
+		"README.md":       "# Home\n\n[page](page.md)\n[sub home](sub/README.md)\n",
+		"page.md":         "# Page\n",
+		"sub/README.md":   "# Sub\n",
+		"sub/article.md":  "# Article\n",
+		"img/diagram.png": "fakepngbytes",
+	}
+	for name, content := range files {
+		full := filepath.Join(src, name)
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(full, []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	oldRoot := *rootDir
+	*rootDir = src
+	defer func() { *rootDir = oldRoot }()
+
+	if err := exportSite(out); err != nil {
+		t.Fatalf("exportSite: %v", err)
+	}
+
+	expectFiles := []string{
+		"index.html",
+		"page/index.html",
+		"sub/index.html",
+		"sub/article/index.html",
+		"img/diagram.png",
+	}
+	for _, f := range expectFiles {
+		full := filepath.Join(out, f)
+		if _, err := os.Stat(full); err != nil {
+			t.Errorf("missing output %s: %v", f, err)
+		}
+	}
+
+	body, err := os.ReadFile(filepath.Join(out, "index.html"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	bodyStr := string(body)
+
+	if strings.Contains(bodyStr, "EventSource") {
+		t.Error("exported HTML must not contain live-reload script")
+	}
+	if !strings.Contains(bodyStr, `href="page/"`) {
+		t.Errorf("expected rewritten link href=\"page/\" in index.html; got:\n%s", bodyStr)
+	}
+	if !strings.Contains(bodyStr, `href="sub/"`) {
+		t.Errorf("expected rewritten link href=\"sub/\" in index.html; got:\n%s", bodyStr)
+	}
+
+	// Sidebar nav must use canonical URLs (no /README suffix for README files).
+	if strings.Contains(bodyStr, `href="/README"`) {
+		t.Errorf("sidebar must not link to /README; expected canonical / for root README")
+	}
+	if strings.Contains(bodyStr, `href="/sub/README"`) {
+		t.Errorf("sidebar must not link to /sub/README; expected canonical /sub for sub README")
+	}
+}
