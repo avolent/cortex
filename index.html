@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='none' stroke='%23888' stroke-width='2'/%3E%3C/svg%3E">
+<title>README</title>
+<style>
+  :root {
+    --bg: #fdfdfc; --fg: #1a1a1a; --muted: #5a5a5a;
+    --border: #e3e3e0; --code-bg: #f4f3f0; --hover: rgba(0,0,0,0.05);
+    --link: #0a4ea3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a; --fg: #e6e6e6; --muted: #9a9a9a;
+      --border: #2c2c2c; --code-bg: #232323; --hover: rgba(255,255,255,0.06);
+      --link: #6db0ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    color: var(--fg); background: var(--bg);
+    font: 18px/1.7 XCharter, Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    padding-left: 280px;
+  }
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; height: 100vh;
+    padding: 1.5rem 1.25rem; overflow-y: auto;
+    border-right: 1px solid var(--border);
+    font-size: 0.95rem; line-height: 1.5;
+  }
+  nav.sidebar a, nav.sidebar summary {
+    display: block; padding: .2rem .5rem;
+    color: inherit; text-decoration: none;
+    border-radius: 3px;
+  }
+  nav.sidebar a:hover, nav.sidebar summary:hover { background: var(--hover); }
+  nav.sidebar a.active { font-weight: 700; }
+  nav.sidebar summary { cursor: pointer; font-weight: 600; }
+  nav.sidebar details { margin: .25rem 0; }
+  nav.sidebar details > *:not(summary) {
+    margin-left: .6rem; padding-left: .6rem;
+    border-left: 1px solid var(--border);
+  }
+  main {
+    max-width: clamp(65ch, calc(100vw - 280px - 6rem), 90ch);
+    margin: 0 auto; padding: 3rem 2rem 4rem;
+  }
+  article h1, article h2, article h3, article h4, article h5, article h6 { line-height: 1.25; margin: 2.5rem 0 1rem; }
+  article h1 { font-size: 2rem; margin-top: 0; text-align: center; }
+  article h2 { font-size: 1.5rem; }
+  article h3 { font-size: 1.2rem; }
+  article h4 { font-size: 1.05rem; }
+  article h5 { font-size: 1rem; font-weight: 700; }
+  article h6 { font-size: 1rem; font-weight: 700; color: var(--muted); }
+  article p { margin: 0 0 1rem; }
+  article a { color: var(--link); }
+  article ul, article ol { margin: 0 0 1rem; padding-left: 1.5rem; }
+  article li { margin: .25rem 0; }
+  article li > ul, article li > ol { margin-bottom: 0; }
+  article dl { margin: 0 0 1rem; }
+  article dt { font-weight: 700; margin-top: .5rem; }
+  article dd { margin: 0 0 .5rem 1.5rem; }
+  article code, article pre {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  article code {
+    font-size: .9em;
+    background: var(--code-bg); padding: .15em .4em; border-radius: 0.25em;
+    vertical-align: -0.05em;
+    overflow-wrap: anywhere;
+  }
+  article pre {
+    border-left: 3px solid var(--border);
+    padding: .5rem 1rem; margin: 1rem 0;
+    overflow-x: auto;
+    font-size: .9em; line-height: 1.5;
+  }
+  article pre code {
+    background: none; padding: 0; font-size: 1em;
+    vertical-align: baseline; overflow-wrap: normal;
+  }
+  article blockquote {
+    border-left: 3px solid var(--border);
+    margin: 1rem 0; padding: .25rem 1rem;
+    color: var(--muted);
+  }
+  article table { border-collapse: collapse; margin: 1rem 0; }
+  article th, article td { border: 1px solid var(--border); padding: .5rem .75rem; }
+  article th { background: var(--code-bg); }
+  article img { max-width: 100%; height: auto; }
+  article hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+  article sup.footnote-ref { font-size: .75em; }
+  article sup.footnote-ref a { text-decoration: none; }
+  article .footnotes { margin-top: 3rem; font-size: .9em; color: var(--muted); }
+  article .footnotes hr { margin-bottom: .5rem; }
+  article .footnotes li { margin: .35rem 0; }
+  article .footnotes li p { margin: 0; }
+  @media (max-width: 768px) {
+    body { padding-left: 0; }
+    nav.sidebar {
+      position: static; width: 100%; height: auto;
+      max-height: 40vh; border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    main { padding: 2rem 1.25rem 3rem; }
+    article h1 { font-size: 1.75rem; }
+  }
+</style>
+</head>
+<body>
+<nav class="sidebar"><a href="/" class="active">README</a><a href="/architecture">architecture</a><a href="/rules">rules</a><a href="/usage">usage</a></nav>
+<main><article><h1 id="cortex-docs">cortex docs</h1>
+
+<p>This folder is the cortex project&rsquo;s own documentation — and it doubles as a
+demo of how cortex renders a folder of markdown.</p>
+
+<p>Run <code>cortex -dir doc</code> from the repo root to see this folder served as a wiki
+at <code>http://localhost:8090</code>.</p>
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+<li><a href="architecture/">Architecture</a> — how cortex is built, request flow, live reload</li>
+<li><a href="rules/">Rules</a> — the hard project principles</li>
+<li><a href="usage/">Usage</a> — flags, behaviour, examples</li>
+</ul>
+</article></main>
+
+</body>
+</html>
+

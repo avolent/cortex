@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='none' stroke='%23888' stroke-width='2'/%3E%3C/svg%3E">
+<title>usage</title>
+<style>
+  :root {
+    --bg: #fdfdfc; --fg: #1a1a1a; --muted: #5a5a5a;
+    --border: #e3e3e0; --code-bg: #f4f3f0; --hover: rgba(0,0,0,0.05);
+    --link: #0a4ea3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a; --fg: #e6e6e6; --muted: #9a9a9a;
+      --border: #2c2c2c; --code-bg: #232323; --hover: rgba(255,255,255,0.06);
+      --link: #6db0ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    color: var(--fg); background: var(--bg);
+    font: 18px/1.7 XCharter, Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    padding-left: 280px;
+  }
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; height: 100vh;
+    padding: 1.5rem 1.25rem; overflow-y: auto;
+    border-right: 1px solid var(--border);
+    font-size: 0.95rem; line-height: 1.5;
+  }
+  nav.sidebar a, nav.sidebar summary {
+    display: block; padding: .2rem .5rem;
+    color: inherit; text-decoration: none;
+    border-radius: 3px;
+  }
+  nav.sidebar a:hover, nav.sidebar summary:hover { background: var(--hover); }
+  nav.sidebar a.active { font-weight: 700; }
+  nav.sidebar summary { cursor: pointer; font-weight: 600; }
+  nav.sidebar details { margin: .25rem 0; }
+  nav.sidebar details > *:not(summary) {
+    margin-left: .6rem; padding-left: .6rem;
+    border-left: 1px solid var(--border);
+  }
+  main {
+    max-width: clamp(65ch, calc(100vw - 280px - 6rem), 90ch);
+    margin: 0 auto; padding: 3rem 2rem 4rem;
+  }
+  article h1, article h2, article h3, article h4, article h5, article h6 { line-height: 1.25; margin: 2.5rem 0 1rem; }
+  article h1 { font-size: 2rem; margin-top: 0; text-align: center; }
+  article h2 { font-size: 1.5rem; }
+  article h3 { font-size: 1.2rem; }
+  article h4 { font-size: 1.05rem; }
+  article h5 { font-size: 1rem; font-weight: 700; }
+  article h6 { font-size: 1rem; font-weight: 700; color: var(--muted); }
+  article p { margin: 0 0 1rem; }
+  article a { color: var(--link); }
+  article ul, article ol { margin: 0 0 1rem; padding-left: 1.5rem; }
+  article li { margin: .25rem 0; }
+  article li > ul, article li > ol { margin-bottom: 0; }
+  article dl { margin: 0 0 1rem; }
+  article dt { font-weight: 700; margin-top: .5rem; }
+  article dd { margin: 0 0 .5rem 1.5rem; }
+  article code, article pre {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  article code {
+    font-size: .9em;
+    background: var(--code-bg); padding: .15em .4em; border-radius: 0.25em;
+    vertical-align: -0.05em;
+    overflow-wrap: anywhere;
+  }
+  article pre {
+    border-left: 3px solid var(--border);
+    padding: .5rem 1rem; margin: 1rem 0;
+    overflow-x: auto;
+    font-size: .9em; line-height: 1.5;
+  }
+  article pre code {
+    background: none; padding: 0; font-size: 1em;
+    vertical-align: baseline; overflow-wrap: normal;
+  }
+  article blockquote {
+    border-left: 3px solid var(--border);
+    margin: 1rem 0; padding: .25rem 1rem;
+    color: var(--muted);
+  }
+  article table { border-collapse: collapse; margin: 1rem 0; }
+  article th, article td { border: 1px solid var(--border); padding: .5rem .75rem; }
+  article th { background: var(--code-bg); }
+  article img { max-width: 100%; height: auto; }
+  article hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+  article sup.footnote-ref { font-size: .75em; }
+  article sup.footnote-ref a { text-decoration: none; }
+  article .footnotes { margin-top: 3rem; font-size: .9em; color: var(--muted); }
+  article .footnotes hr { margin-bottom: .5rem; }
+  article .footnotes li { margin: .35rem 0; }
+  article .footnotes li p { margin: 0; }
+  @media (max-width: 768px) {
+    body { padding-left: 0; }
+    nav.sidebar {
+      position: static; width: 100%; height: auto;
+      max-height: 40vh; border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    main { padding: 2rem 1.25rem 3rem; }
+    article h1 { font-size: 1.75rem; }
+  }
+</style>
+</head>
+<body>
+<nav class="sidebar"><a href="/">README</a><a href="/architecture">architecture</a><a href="/rules">rules</a><a href="/usage" class="active">usage</a></nav>
+<main><article><h1 id="usage">Usage</h1>
+
+<h2 id="install">Install</h2>
+
+<pre><code class="language-bash">go install github.com/avolent/cortex@latest
+</code></pre>
+
+<p>Or build from source:</p>
+
+<pre><code class="language-bash">git clone https://github.com/avolent/cortex
+cd cortex
+go build
+</code></pre>
+
+<h2 id="flags">Flags</h2>
+
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>-dir</code></td>
+<td><code>.</code></td>
+<td>Folder to serve (or export)</td>
+</tr>
+
+<tr>
+<td><code>-addr</code></td>
+<td><code>:8090</code></td>
+<td>Listen address (server mode only)</td>
+</tr>
+
+<tr>
+<td><code>-export</code></td>
+<td>(unset)</td>
+<td>If set, render the wiki to static HTML in this directory and exit</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="examples">Examples</h2>
+
+<pre><code class="language-bash">cortex                          # serve current directory on :8090
+cortex -dir ~/notes             # serve another folder
+cortex -dir ~/repo -addr :9000  # custom port
+
+cortex -dir doc -export ./out   # render docs to ./out, exit
+</code></pre>
+
+<p>Server mode: open <code>http://localhost:8090</code>.</p>
+
+<h2 id="static-export">Static export</h2>
+
+<p><code>-export &lt;dir&gt;</code> walks every <code>.md</code> file under <code>-dir</code>, renders it to HTML,
+and writes the result under <code>&lt;dir&gt;</code> along with copies of any embedded
+images. The output is a static site you can publish to GitHub Pages,
+Netlify, S3, or anywhere that serves files.</p>
+
+<p>Output layout:</p>
+
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Output</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>README.md</code></td>
+<td><code>out/index.html</code></td>
+</tr>
+
+<tr>
+<td><code>foo.md</code></td>
+<td><code>out/foo/index.html</code></td>
+</tr>
+
+<tr>
+<td><code>foo/bar.md</code></td>
+<td><code>out/foo/bar/index.html</code></td>
+</tr>
+
+<tr>
+<td><code>foo/README.md</code></td>
+<td><code>out/foo/index.html</code></td>
+</tr>
+
+<tr>
+<td><code>img/diagram.png</code></td>
+<td><code>out/img/diagram.png</code></td>
+</tr>
+</tbody>
+</table>
+<p>URLs become directory-style (<code>/foo/</code>, <code>/foo/bar/</code>) so static hosts that
+don&rsquo;t strip extensions still resolve them correctly.</p>
+
+<p>Live reload is removed from the exported HTML — there&rsquo;s no server to
+push events to.</p>
+
+<h2 id="url-behaviour">URL behaviour</h2>
+
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>Serves</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>/</code></td>
+<td><code>README.md</code> at the served root</td>
+</tr>
+
+<tr>
+<td><code>/foo</code></td>
+<td><code>foo.md</code></td>
+</tr>
+
+<tr>
+<td><code>/foo.md</code></td>
+<td><code>foo.md</code> (so relative <code>[link](other.md)</code> works)</td>
+</tr>
+
+<tr>
+<td><code>/foo/</code></td>
+<td><code>foo/README.md</code> if present</td>
+</tr>
+
+<tr>
+<td><code>/img/diagram.png</code></td>
+<td>static image, served as-is</td>
+</tr>
+</tbody>
+</table>
+<p>Lookups are case-insensitive on the file extension and stem, so <code>/TODO</code>
+matches <code>TODO.MD</code>.</p>
+
+<h2 id="skipped-paths">Skipped paths</h2>
+
+<p>These directories are excluded from the sidebar and from URL routing:</p>
+
+<p><code>.git</code>, <code>node_modules</code>, <code>vendor</code>, <code>tmp</code>, <code>dist</code>, <code>build</code>, <code>.next</code>,
+<code>.cache</code>, <code>.claude</code></p>
+
+<p>Any file or directory starting with a dot is also excluded.</p>
+
+<h2 id="live-reload">Live reload</h2>
+
+<p>Edits to any <code>.md</code> file or embedded image trigger an automatic browser
+reload. New folders created while cortex is running are picked up
+automatically — no restart needed.</p>
+
+<h2 id="sidebar-layout">Sidebar layout</h2>
+
+<ul>
+<li>Folders are collapsible <code>&lt;details&gt;</code> blocks (open by default)</li>
+<li><code>README.md</code> is pinned to the top of each folder</li>
+<li>Everything else is alphabetical</li>
+</ul>
+
+<h2 id="theme">Theme</h2>
+
+<p>Light + dark via the OS preference (<code>prefers-color-scheme</code>). No flag, no
+toggle, no setting.</p>
+</article></main>
+
+</body>
+</html>
+
