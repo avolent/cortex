@@ -32,10 +32,12 @@ inside `main.go` or is embedded into the binary at build time.
      (`.png`, `.jpg`, `.svg`, etc.) inside the served tree, `http.ServeFile`
      hands it back.
    - Otherwise: 404.
-3. **Sidebar** is rebuilt on every request by walking the tree
-   (`collectMarkdown` → `buildTree`). README is pinned to the top of each
-   folder; everything else alphabetical. Cheap enough at typical repo sizes
-   that no caching is worth the complexity.
+3. **Sidebar** is built from a cached file list (`fileIndex`). The list
+   is collected once at first request and reused; the fsnotify goroutine
+   invalidates it whenever a `.md` file is created, removed, or renamed.
+   `buildTree` still recurses per request (it depends on which page is
+   active) but no filesystem walk happens. README is pinned to the top
+   of each folder; everything else alphabetical.
 
 ## Live reload
 
@@ -91,6 +93,27 @@ just a different sink for the output.
 
 This keeps generated/heavy directories out of the sidebar and the URL
 namespace.
+
+## Safety
+
+- **Path traversal**: incoming URLs are passed through `path.Clean` and
+  rejected if they still contain `..`. Static-asset serving is gated by
+  an extension whitelist.
+- **Symlink containment**: `safeResolve()` calls `filepath.EvalSymlinks`
+  and verifies the result stays inside `*rootDir`. A `.md` symlink that
+  points to `/etc/passwd` is dropped at walk time and refused at request
+  time.
+- **Render size cap**: markdown files larger than 10 MiB are refused so
+  a runaway file can't OOM the process.
+- **SSE connection cap**: at most 256 concurrent live-reload subscribers.
+  Excess connections get a `503` instead of being added to the
+  broadcast list.
+- **Default loopback bind**: `-addr` defaults to `127.0.0.1:8090` so the
+  wiki isn't exposed on the LAN unless you explicitly opt in.
+
+cortex assumes the markdown files it serves are trusted (your own
+notes, your own repo). It does not sanitize inline HTML — see the
+trust-model note in [usage.md](usage.md).
 
 ## Dependencies
 

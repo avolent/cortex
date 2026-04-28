@@ -19,15 +19,17 @@ go build
 ## Use
 
 ```bash
-cortex                          # serve current directory on :8090
-cortex -dir ~/path/to/repo      # serve another folder
-cortex -dir ~/repo -addr :9000  # custom port
+cortex                              # serve current directory on 127.0.0.1:8090
+cortex -dir ~/path/to/repo          # serve another folder
+cortex -dir ~/repo -addr 127.0.0.1:9000  # custom port
+cortex -dir ~/repo -addr :8090      # bind all interfaces (LAN-accessible)
 
-cortex -dir ~/notes -export ./out  # render to static HTML, exit
+cortex -dir ~/notes -export ./out   # render to static HTML, exit
 ```
 
 Open `http://localhost:8090`. Or upload the `-export` output to any
-static host (GitHub Pages, Netlify, S3).
+static host (GitHub Pages, Netlify, S3). The default bind is loopback
+only; pass `-addr :8090` to expose on the LAN.
 
 ## How it works
 

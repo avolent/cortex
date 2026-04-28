@@ -62,7 +62,10 @@ Out of scope:
 - Search (browser `Ctrl-F` is fine)
 - Plugins or extension points
 - Custom themes via config
-- Frontmatter parsing
+- Frontmatter as a feature (no titles, dates, or tags surfaced from it).
+  A leading YAML (`---`) or TOML (`+++`) block is silently stripped
+  before rendering so it doesn't show up as garbled output, but its
+  contents are never read.
 - User CSS injection
 - Auth, multi-user, editing
 

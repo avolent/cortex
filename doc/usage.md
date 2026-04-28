@@ -19,7 +19,7 @@ go build
 | Flag | Default | Meaning |
 |---|---|---|
 | `-dir` | `.` | Folder to serve (or export) |
-| `-addr` | `:8090` | Listen address (server mode only) |
+| `-addr` | `127.0.0.1:8090` | Listen address (loopback by default; use `:8090` to expose on all interfaces) |
 | `-export` | (unset) | If set, render the wiki to static HTML in this directory and exit |
 
 ## Examples
@@ -95,3 +95,19 @@ automatically — no restart needed.
 
 Light + dark via the OS preference (`prefers-color-scheme`). No flag, no
 toggle, no setting.
+
+## Trust model
+
+cortex serves your own markdown unmodified. Like most CommonMark
+renderers, gomarkdown passes through inline HTML — including `<script>`
+tags — into the rendered page. That's fine for files you wrote yourself;
+it means you should not point cortex at a folder of *untrusted*
+markdown (e.g. user-submitted content) without sandboxing.
+
+Symlinks are followed only if their targets stay inside the served
+root. Symlinks pointing outside are silently dropped from both the
+sidebar and URL routing.
+
+The default listen address is `127.0.0.1:8090` so the wiki isn't
+exposed on the local network. Pass `-addr :8090` (or `-addr 0.0.0.0:8090`)
+to bind on all interfaces if you want LAN access.

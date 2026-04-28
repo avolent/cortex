@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"flag"
 	"fmt"
@@ -29,11 +30,13 @@ const (
 	ssePingInterval = 30 * time.Second
 	readHeaderLimit = 10 * time.Second
 	idleConnLimit   = 60 * time.Second
+	maxFileSize     = 10 << 20 // 10 MiB cap on a single rendered markdown file
+	maxSSEClients   = 256
 )
 
 var (
 	rootDir   = flag.String("dir", ".", "repository root to serve")
-	addr      = flag.String("addr", ":8090", "listen address")
+	addr      = flag.String("addr", "127.0.0.1:8090", "listen address (use :8090 to expose on all interfaces)")
 	exportDir = flag.String("export", "", "if set, render the wiki to static HTML in this directory and exit")
 )
 
@@ -201,7 +204,35 @@ func isSkipped(rel string) bool {
 	return false
 }
 
+// isUnderRoot reports whether abs is *rootDir or a path inside it. abs must
+// already have been passed through filepath.EvalSymlinks (or otherwise be
+// known to contain no symlinks) so that comparison is meaningful.
+func isUnderRoot(abs string) bool {
+	rel, err := filepath.Rel(*rootDir, abs)
+	if err != nil {
+		return false
+	}
+	if rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return false
+	}
+	return true
+}
+
+// safeResolve resolves any symlinks in p and returns the result if it stays
+// inside *rootDir. Returns "" if the path doesn't exist or escapes the root.
+func safeResolve(p string) string {
+	real, err := filepath.EvalSymlinks(p)
+	if err != nil {
+		return ""
+	}
+	if !isUnderRoot(real) {
+		return ""
+	}
+	return real
+}
+
 // collectMarkdown walks the root and returns relative paths (slash-separated) of every .md file.
+// Symlinked .md files whose target falls outside *rootDir are excluded.
 func collectMarkdown() []string {
 	var files []string
 	_ = filepath.WalkDir(*rootDir, func(p string, d fs.DirEntry, err error) error {
@@ -218,12 +249,72 @@ func collectMarkdown() []string {
 			}
 			return nil
 		}
-		if strings.EqualFold(filepath.Ext(p), ".md") {
-			files = append(files, filepath.ToSlash(rel))
+		if !strings.EqualFold(filepath.Ext(p), ".md") {
+			return nil
 		}
+		if d.Type()&fs.ModeSymlink != 0 {
+			real := safeResolve(p)
+			if real == "" {
+				return nil
+			}
+			info, err := os.Stat(real)
+			if err != nil || info.IsDir() {
+				return nil
+			}
+		}
+		files = append(files, filepath.ToSlash(rel))
 		return nil
 	})
 	return files
+}
+
+// fileIndex caches the markdown file list and lookup tables so the tree
+// walk doesn't run on every request. The fsnotify watcher invalidates it
+// whenever a .md file is created, removed, or renamed.
+type fileIndex struct {
+	mu    sync.RWMutex
+	ready bool
+	files []string          // slash-separated relative paths
+	exact map[string]string // url-style stem (case-sensitive) -> rel
+	lower map[string]string // lowercased stem -> rel (case-insensitive fallback)
+}
+
+var index = &fileIndex{}
+
+func (x *fileIndex) snapshot() ([]string, map[string]string, map[string]string) {
+	x.mu.RLock()
+	if x.ready {
+		files, exact, lower := x.files, x.exact, x.lower
+		x.mu.RUnlock()
+		return files, exact, lower
+	}
+	x.mu.RUnlock()
+
+	files := collectMarkdown()
+	exact := make(map[string]string, len(files))
+	lower := make(map[string]string, len(files))
+	for _, f := range files {
+		ext := path.Ext(f)
+		stem := f[:len(f)-len(ext)]
+		exact[stem] = f
+		lower[strings.ToLower(stem)] = f
+	}
+	x.mu.Lock()
+	x.files = files
+	x.exact = exact
+	x.lower = lower
+	x.ready = true
+	x.mu.Unlock()
+	return files, exact, lower
+}
+
+func (x *fileIndex) invalidate() {
+	x.mu.Lock()
+	x.ready = false
+	x.files = nil
+	x.exact = nil
+	x.lower = nil
+	x.mu.Unlock()
 }
 
 // buildTree groups files by directory under prefix. activeURL is "/foo/bar" form.
@@ -284,62 +375,33 @@ func buildTree(prefix string, files []string, activeURL string) []navItem {
 
 // resolveMarkdown returns the on-disk relative path of the .md file backing the URL, or "" if none.
 // Lookup is case-insensitive on the .md extension and on the file stem, so /TODO matches TODO.MD.
+// All lookups go through the file index cache; the filesystem is not touched per request.
 func resolveMarkdown(urlPath string) string {
 	urlPath = strings.TrimPrefix(urlPath, "/")
 	urlPath = strings.TrimSuffix(urlPath, "/")
-	if ext := filepath.Ext(urlPath); strings.EqualFold(ext, ".md") {
+	if ext := path.Ext(urlPath); strings.EqualFold(ext, ".md") {
 		urlPath = urlPath[:len(urlPath)-len(ext)]
 	}
+	if urlPath != "" && isSkipped(urlPath) {
+		return ""
+	}
 
-	var candidates []string
+	_, exact, lower := index.snapshot()
+
+	var stems []string
 	if urlPath == "" {
-		candidates = []string{"README.md", "readme.md"}
+		stems = []string{"README", "readme"}
 	} else {
-		candidates = []string{
-			urlPath + ".md",
-			filepath.Join(urlPath, "README.md"),
-			filepath.Join(urlPath, "readme.md"),
+		stems = []string{urlPath, urlPath + "/README", urlPath + "/readme"}
+	}
+	for _, s := range stems {
+		if rel, ok := exact[s]; ok {
+			return rel
 		}
 	}
-	for _, c := range candidates {
-		if isSkipped(c) {
-			continue
-		}
-		full := filepath.Join(*rootDir, c)
-		if info, err := os.Stat(full); err == nil && !info.IsDir() {
-			return c
-		}
-	}
-
-	// Fallback: case-insensitive directory scan for the stem (e.g. URL /TODO -> TODO.MD).
-	if urlPath != "" && !isSkipped(urlPath) {
-		dir := filepath.Dir(urlPath)
-		if dir == "." {
-			dir = ""
-		}
-		stem := filepath.Base(urlPath)
-		searchDir := *rootDir
-		if dir != "" {
-			searchDir = filepath.Join(*rootDir, dir)
-		}
-		if entries, err := os.ReadDir(searchDir); err == nil {
-			for _, e := range entries {
-				if e.IsDir() {
-					continue
-				}
-				name := e.Name()
-				ext := filepath.Ext(name)
-				if !strings.EqualFold(ext, ".md") {
-					continue
-				}
-				if strings.EqualFold(name[:len(name)-len(ext)], stem) {
-					rel := name
-					if dir != "" {
-						rel = filepath.Join(dir, name)
-					}
-					return rel
-				}
-			}
+	for _, s := range stems {
+		if rel, ok := lower[strings.ToLower(s)]; ok {
+			return rel
 		}
 	}
 	return ""
@@ -397,7 +459,47 @@ func rewriteMdLinks(in []byte) []byte {
 	})
 }
 
+// stripFrontmatter removes a leading YAML (---) or TOML (+++) frontmatter
+// block so it is not rendered as content. gomarkdown has no native support,
+// so a `---` fence becomes an <hr> and the body becomes a paragraph.
+func stripFrontmatter(md []byte) []byte {
+	var fence string
+	switch {
+	case bytes.HasPrefix(md, []byte("---\n")), bytes.HasPrefix(md, []byte("---\r\n")):
+		fence = "---"
+	case bytes.HasPrefix(md, []byte("+++\n")), bytes.HasPrefix(md, []byte("+++\r\n")):
+		fence = "+++"
+	default:
+		return md
+	}
+	rest := md[4:]
+	if md[3] == '\r' {
+		rest = md[5:]
+	}
+	for {
+		nl := bytes.IndexByte(rest, '\n')
+		line := rest
+		if nl >= 0 {
+			line = rest[:nl]
+		}
+		if len(line) > 0 && line[len(line)-1] == '\r' {
+			line = line[:len(line)-1]
+		}
+		if string(line) == fence {
+			if nl < 0 {
+				return nil
+			}
+			return rest[nl+1:]
+		}
+		if nl < 0 {
+			return md
+		}
+		rest = rest[nl+1:]
+	}
+}
+
 func renderMarkdown(md []byte) template.HTML {
+	md = stripFrontmatter(md)
 	p := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs | parser.Footnotes)
 	r := html.NewRenderer(html.RendererOptions{Flags: html.CommonFlags})
 	return template.HTML(rewriteMdLinks(markdown.Render(p.Parse(md), r)))
@@ -406,8 +508,34 @@ func renderMarkdown(md []byte) template.HTML {
 // titleForFile returns the page title for an on-disk markdown path.
 // "foo/bar.md" -> "bar", "foo/README.md" -> "README".
 func titleForFile(rel string) string {
-	stem := strings.TrimSuffix(filepath.ToSlash(rel), filepath.Ext(rel))
-	return path.Base(stem)
+	slash := filepath.ToSlash(rel)
+	return path.Base(strings.TrimSuffix(slash, path.Ext(slash)))
+}
+
+// readMarkdown reads a markdown file from disk, refusing files larger than
+// maxFileSize and refusing symlinks that resolve outside *rootDir.
+func readMarkdown(rel string) ([]byte, error) {
+	full := filepath.Join(*rootDir, rel)
+	real := safeResolve(full)
+	if real == "" {
+		return nil, fs.ErrNotExist
+	}
+	f, err := os.Open(real)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	info, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+	if info.IsDir() {
+		return nil, fs.ErrNotExist
+	}
+	if info.Size() > maxFileSize {
+		return nil, fmt.Errorf("file %s exceeds %d byte cap (%d bytes)", rel, maxFileSize, info.Size())
+	}
+	return io.ReadAll(io.LimitReader(f, maxFileSize+1))
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -418,16 +546,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if rel := resolveMarkdown(cleaned); rel != "" {
-		md, err := os.ReadFile(filepath.Join(*rootDir, rel))
+		md, err := readMarkdown(rel)
 		if err != nil {
+			log.Printf("read %s: %v", rel, err)
 			http.NotFound(w, r)
 			return
 		}
+		files, _, _ := index.snapshot()
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		if err := tmpl.Execute(w, pageData{
 			Title:   titleForFile(rel),
 			Content: renderMarkdown(md),
-			Nav:     buildTree("", collectMarkdown(), urlForFile(rel)),
+			Nav:     buildTree("", files, urlForFile(rel)),
 			Reload:  true,
 		}); err != nil {
 			log.Printf("render %s: %v", r.URL.Path, err)
@@ -439,7 +569,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	rel := strings.TrimPrefix(cleaned, "/")
 	ext := strings.ToLower(filepath.Ext(rel))
 	if rel != "" && staticExts[ext] && !isSkipped(rel) {
-		http.ServeFile(w, r, filepath.Join(*rootDir, rel))
+		full := filepath.Join(*rootDir, rel)
+		real := safeResolve(full)
+		if real == "" {
+			http.NotFound(w, r)
+			return
+		}
+		http.ServeFile(w, r, real)
 		return
 	}
 
@@ -454,11 +590,16 @@ type reloader struct {
 
 func newReloader() *reloader { return &reloader{subs: map[chan struct{}]struct{}{}} }
 
+// subscribe registers a new SSE listener. Returns nil if the connection
+// cap is reached, in which case the caller should reject the request.
 func (r *reloader) subscribe() chan struct{} {
-	ch := make(chan struct{}, 1)
 	r.mu.Lock()
+	defer r.mu.Unlock()
+	if len(r.subs) >= maxSSEClients {
+		return nil
+	}
+	ch := make(chan struct{}, 1)
 	r.subs[ch] = struct{}{}
-	r.mu.Unlock()
 	return ch
 }
 
@@ -540,6 +681,10 @@ func watchTree(ctx context.Context, root string, r *reloader) {
 			if ext != ".md" && !staticExts[ext] {
 				continue
 			}
+			// Writes don't change the file list; only structural events do.
+			if ext == ".md" && ev.Op&(fsnotify.Create|fsnotify.Remove|fsnotify.Rename) != 0 {
+				index.invalidate()
+			}
 			schedule()
 		case err, ok := <-w.Errors:
 			if !ok {
@@ -557,14 +702,18 @@ func sseHandler(r *reloader) http.HandlerFunc {
 			http.Error(w, "streaming unsupported", http.StatusInternalServerError)
 			return
 		}
+		ch := r.subscribe()
+		if ch == nil {
+			http.Error(w, "too many subscribers", http.StatusServiceUnavailable)
+			return
+		}
+		defer r.unsubscribe(ch)
+
 		w.Header().Set("Content-Type", "text/event-stream")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Connection", "keep-alive")
 		fmt.Fprint(w, ": connected\n\n")
 		flusher.Flush()
-
-		ch := r.subscribe()
-		defer r.unsubscribe(ch)
 		ping := time.NewTicker(ssePingInterval)
 		defer ping.Stop()
 
@@ -586,10 +735,10 @@ func sseHandler(r *reloader) http.HandlerFunc {
 // urlForFile maps an on-disk markdown path (slash-separated) to its canonical URL.
 // "README.md" -> "/", "foo.md" -> "/foo", "foo/README.md" -> "/foo".
 func urlForFile(rel string) string {
-	rel = filepath.ToSlash(rel)
-	stem := strings.TrimSuffix(rel, filepath.Ext(rel))
-	if strings.EqualFold(filepath.Base(stem), "README") {
-		dir := filepath.ToSlash(filepath.Dir(stem))
+	slash := filepath.ToSlash(rel)
+	stem := strings.TrimSuffix(slash, path.Ext(slash))
+	if strings.EqualFold(path.Base(stem), "README") {
+		dir := path.Dir(stem)
 		if dir == "." {
 			return "/"
 		}
@@ -645,7 +794,7 @@ func exportSite(outDir string) error {
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		return err
 	}
-	files := collectMarkdown()
+	files, _, _ := index.snapshot()
 	seen := map[string]bool{}
 	for _, f := range files {
 		url := urlForFile(f)
@@ -659,7 +808,7 @@ func exportSite(outDir string) error {
 		if rel == "" {
 			continue
 		}
-		md, err := os.ReadFile(filepath.Join(*rootDir, rel))
+		md, err := readMarkdown(rel)
 		if err != nil {
 			return fmt.Errorf("read %s: %w", rel, err)
 		}
@@ -676,6 +825,7 @@ func exportSite(outDir string) error {
 	}
 
 	// Copy embedded static assets (images) into the same relative paths.
+	// Symlinked assets that resolve outside *rootDir are skipped.
 	return filepath.WalkDir(*rootDir, func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return nil
@@ -691,8 +841,15 @@ func exportSite(outDir string) error {
 		if !staticExts[ext] || isSkipped(rel) {
 			return nil
 		}
+		src := p
+		if d.Type()&fs.ModeSymlink != 0 {
+			src = safeResolve(p)
+			if src == "" {
+				return nil
+			}
+		}
 		dst := filepath.Join(outDir, rel)
-		if err := copyAsset(p, dst); err != nil {
+		if err := copyAsset(src, dst); err != nil {
 			return fmt.Errorf("copy %s: %w", rel, err)
 		}
 		log.Printf("copied %s", dst)
@@ -705,6 +862,11 @@ func main() {
 	abs, err := filepath.Abs(*rootDir)
 	if err != nil {
 		log.Fatalf("resolve dir: %v", err)
+	}
+	// Resolve any symlinks in the root itself so isUnderRoot comparisons
+	// against EvalSymlinks'd descendants are consistent.
+	if resolved, err := filepath.EvalSymlinks(abs); err == nil {
+		abs = resolved
 	}
 	*rootDir = abs
 	if info, err := os.Stat(*rootDir); err != nil || !info.IsDir() {
@@ -732,6 +894,6 @@ func main() {
 		IdleTimeout:       idleConnLimit,
 		// WriteTimeout intentionally unset: SSE connections are long-lived.
 	}
-	log.Printf("cortex: serving %s on http://localhost%s", *rootDir, *addr)
+	log.Printf("cortex: serving %s on http://%s", *rootDir, *addr)
 	log.Fatal(srv.ListenAndServe())
 }

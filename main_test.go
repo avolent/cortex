@@ -10,11 +10,23 @@ import (
 
 // withRoot runs fn with *rootDir temporarily set, then restores it.
 // All filesystem-touching tests share this helper since *rootDir is global.
+// The file index cache is invalidated on entry and exit so each test sees
+// a fresh view of its fixture directory. Mirrors the EvalSymlinks step
+// main() applies so safeResolve comparisons are consistent on platforms
+// (e.g. macOS) where /var resolves to /private/var.
 func withRoot(t *testing.T, dir string, fn func()) {
 	t.Helper()
+	resolved, err := filepath.EvalSymlinks(dir)
+	if err != nil {
+		resolved = dir
+	}
 	old := *rootDir
-	*rootDir = dir
-	defer func() { *rootDir = old }()
+	*rootDir = resolved
+	index.invalidate()
+	defer func() {
+		*rootDir = old
+		index.invalidate()
+	}()
 	fn()
 }
 
@@ -136,6 +148,93 @@ func TestRewriteMdLinks(t *testing.T) {
 		if got != tc.want {
 			t.Errorf("rewriteMdLinks(%q) = %q, want %q", tc.in, got, tc.want)
 		}
+	}
+}
+
+func TestSymlinkEscapesRootRejected(t *testing.T) {
+	if _, err := os.Stat("/etc/hosts"); err != nil {
+		t.Skip("no /etc/hosts on this platform")
+	}
+	tmp := t.TempDir()
+	writeTree(t, tmp, map[string]string{
+		"README.md": "# Home\n",
+	})
+	// Symlink whose target is outside the served root.
+	if err := os.Symlink("/etc/hosts", filepath.Join(tmp, "escape.md")); err != nil {
+		t.Fatal(err)
+	}
+
+	withRoot(t, tmp, func() {
+		// collectMarkdown must not include the escaping symlink.
+		for _, f := range collectMarkdown() {
+			if f == "escape.md" {
+				t.Errorf("collectMarkdown included symlink escaping the root: %q", f)
+			}
+		}
+		// The handler must 404 the URL even if the index were stale.
+		req := httptest.NewRequest("GET", "/escape", nil)
+		rec := httptest.NewRecorder()
+		handler(rec, req)
+		if rec.Code != 404 {
+			t.Errorf("escape symlink: status = %d, want 404", rec.Code)
+		}
+	})
+}
+
+func TestSymlinkInsideRootAccepted(t *testing.T) {
+	tmp := t.TempDir()
+	writeTree(t, tmp, map[string]string{
+		"real.md": "# Real\n",
+	})
+	if err := os.Symlink("real.md", filepath.Join(tmp, "alias.md")); err != nil {
+		t.Fatal(err)
+	}
+
+	withRoot(t, tmp, func() {
+		req := httptest.NewRequest("GET", "/alias", nil)
+		rec := httptest.NewRecorder()
+		handler(rec, req)
+		if rec.Code != 200 {
+			t.Errorf("in-root symlink: status = %d, want 200", rec.Code)
+		}
+		if !strings.Contains(rec.Body.String(), "Real") {
+			t.Errorf("expected rendered body of symlink target")
+		}
+	})
+}
+
+func TestReadMarkdownSizeLimit(t *testing.T) {
+	tmp := t.TempDir()
+	huge := strings.Repeat("x", maxFileSize+1)
+	writeTree(t, tmp, map[string]string{"big.md": huge})
+
+	withRoot(t, tmp, func() {
+		if _, err := readMarkdown("big.md"); err == nil {
+			t.Errorf("expected size-limit error for oversized file")
+		}
+	})
+}
+
+func TestStripFrontmatter(t *testing.T) {
+	cases := []struct{ name, in, want string }{
+		{"yaml", "---\ntitle: Hi\ndate: 2026-01-01\n---\n# Body\n", "# Body\n"},
+		{"toml", "+++\ntitle = \"Hi\"\n+++\n# Body\n", "# Body\n"},
+		{"yaml-crlf", "---\r\ntitle: Hi\r\n---\r\n# Body\r\n", "# Body\r\n"},
+		{"yaml-no-trailing-newline", "---\ntitle: Hi\n---", ""},
+		{"no-frontmatter", "# Body\n", "# Body\n"},
+		{"hr-not-frontmatter", "Some text\n\n---\n\nMore\n", "Some text\n\n---\n\nMore\n"},
+		{"unterminated-yaml", "---\ntitle: Hi\nno close fence\n", "---\ntitle: Hi\nno close fence\n"},
+		{"empty", "", ""},
+		{"plain-dashes", "---", "---"},
+		{"mismatched-fence", "---\ntitle: Hi\n+++\n# Body\n", "---\ntitle: Hi\n+++\n# Body\n"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := string(stripFrontmatter([]byte(tc.in)))
+			if got != tc.want {
+				t.Errorf("stripFrontmatter(%q) = %q, want %q", tc.in, got, tc.want)
+			}
+		})
 	}
 }
 
