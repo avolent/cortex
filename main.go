@@ -8,15 +8,18 @@ import (
 	"html/template"
 	"io"
 	"io/fs"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
 	"path"
 	"path/filepath"
 	"regexp"
+	"runtime/debug"
 	"sort"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -32,12 +35,15 @@ const (
 	idleConnLimit   = 60 * time.Second
 	maxFileSize     = 10 << 20 // 10 MiB cap on a single rendered markdown file
 	maxSSEClients   = 256
+	shutdownTimeout = 5 * time.Second
 )
 
 var (
-	rootDir   = flag.String("dir", ".", "repository root to serve")
-	addr      = flag.String("addr", "127.0.0.1:8090", "listen address (use :8090 to expose on all interfaces)")
-	exportDir = flag.String("export", "", "if set, render the wiki to static HTML in this directory and exit")
+	rootDir     = flag.String("dir", ".", "repository root to serve")
+	addr        = flag.String("addr", "127.0.0.1:8090", "listen address (use :8090 to expose on all interfaces)")
+	exportDir   = flag.String("export", "", "if set, render the wiki to static HTML in this directory and exit")
+	versionFlag = flag.Bool("version", false, "print version and exit")
+	indexNames  = flag.String("index", "", "comma-separated extra directory-index filenames to try when a directory has no README, e.g. -index index,home")
 )
 
 var skipDirs = map[string]bool{
@@ -290,6 +296,14 @@ func (x *fileIndex) snapshot() ([]string, map[string]string, map[string]string) 
 	}
 	x.mu.RUnlock()
 
+	x.mu.Lock()
+	defer x.mu.Unlock()
+	// Re-check: another goroutine may have populated the index while we
+	// were waiting for the write lock, in which case skip the tree walk.
+	if x.ready {
+		return x.files, x.exact, x.lower
+	}
+
 	files := collectMarkdown()
 	exact := make(map[string]string, len(files))
 	lower := make(map[string]string, len(files))
@@ -299,12 +313,10 @@ func (x *fileIndex) snapshot() ([]string, map[string]string, map[string]string) 
 		exact[stem] = f
 		lower[strings.ToLower(stem)] = f
 	}
-	x.mu.Lock()
 	x.files = files
 	x.exact = exact
 	x.lower = lower
 	x.ready = true
-	x.mu.Unlock()
 	return files, exact, lower
 }
 
@@ -373,6 +385,29 @@ func buildTree(prefix string, files []string, activeURL string) []navItem {
 	return items
 }
 
+// extraIndexNames returns the -index flag value as a slice of bare stems
+// (no .md extension), trimmed of whitespace. Empty entries are dropped.
+// These are tried, in order, after README/readme when resolving a
+// directory's index page.
+func extraIndexNames() []string {
+	if *indexNames == "" {
+		return nil
+	}
+	raw := strings.Split(*indexNames, ",")
+	names := make([]string, 0, len(raw))
+	for _, n := range raw {
+		n = strings.TrimSpace(n)
+		if n == "" {
+			continue
+		}
+		if ext := path.Ext(n); strings.EqualFold(ext, ".md") {
+			n = n[:len(n)-len(ext)]
+		}
+		names = append(names, n)
+	}
+	return names
+}
+
 // resolveMarkdown returns the on-disk relative path of the .md file backing the URL, or "" if none.
 // Lookup is case-insensitive on the .md extension and on the file stem, so /TODO matches TODO.MD.
 // All lookups go through the file index cache; the filesystem is not touched per request.
@@ -391,8 +426,12 @@ func resolveMarkdown(urlPath string) string {
 	var stems []string
 	if urlPath == "" {
 		stems = []string{"README", "readme"}
+		stems = append(stems, extraIndexNames()...)
 	} else {
 		stems = []string{urlPath, urlPath + "/README", urlPath + "/readme"}
+		for _, n := range extraIndexNames() {
+			stems = append(stems, urlPath+"/"+n)
+		}
 	}
 	for _, s := range stems {
 		if rel, ok := exact[s]; ok {
@@ -548,7 +587,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if rel := resolveMarkdown(cleaned); rel != "" {
 		md, err := readMarkdown(rel)
 		if err != nil {
-			log.Printf("read %s: %v", rel, err)
+			slog.Warn("read markdown", "path", rel, "err", err)
 			http.NotFound(w, r)
 			return
 		}
@@ -560,7 +599,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			Nav:     buildTree("", files, urlForFile(rel)),
 			Reload:  true,
 		}); err != nil {
-			log.Printf("render %s: %v", r.URL.Path, err)
+			slog.Error("render page", "path", r.URL.Path, "err", err)
 		}
 		return
 	}
@@ -625,14 +664,14 @@ func (r *reloader) broadcast() {
 func watchTree(ctx context.Context, root string, r *reloader) {
 	w, err := fsnotify.NewWatcher()
 	if err != nil {
-		log.Printf("watch disabled: %v", err)
+		slog.Warn("watch disabled", "err", err)
 		return
 	}
 	defer w.Close()
 
 	addDir := func(p string) {
 		if err := w.Add(p); err != nil {
-			log.Printf("watch %s: %v", p, err)
+			slog.Warn("watch add failed", "path", p, "err", err)
 		}
 	}
 
@@ -690,7 +729,7 @@ func watchTree(ctx context.Context, root string, r *reloader) {
 			if !ok {
 				return
 			}
-			log.Printf("watcher: %v", err)
+			slog.Error("watcher error", "err", err)
 		}
 	}
 }
@@ -732,12 +771,27 @@ func sseHandler(r *reloader) http.HandlerFunc {
 	}
 }
 
+// isIndexName reports whether base (case-insensitive) is a directory-index
+// filename: "README", or one of the extra names configured via -index.
+func isIndexName(base string) bool {
+	if strings.EqualFold(base, "README") {
+		return true
+	}
+	for _, n := range extraIndexNames() {
+		if strings.EqualFold(base, n) {
+			return true
+		}
+	}
+	return false
+}
+
 // urlForFile maps an on-disk markdown path (slash-separated) to its canonical URL.
 // "README.md" -> "/", "foo.md" -> "/foo", "foo/README.md" -> "/foo".
+// A configured -index name (e.g. "index") collapses the same way README does.
 func urlForFile(rel string) string {
 	slash := filepath.ToSlash(rel)
 	stem := strings.TrimSuffix(slash, path.Ext(slash))
-	if strings.EqualFold(path.Base(stem), "README") {
+	if isIndexName(path.Base(stem)) {
 		dir := path.Dir(stem)
 		if dir == "." {
 			return "/"
@@ -799,7 +853,7 @@ func exportSite(outDir string) error {
 	for _, f := range files {
 		url := urlForFile(f)
 		if seen[url] {
-			log.Printf("skip %s: %q already produced by another file", f, url)
+			slog.Warn("skip duplicate output", "file", f, "url", url)
 			continue
 		}
 		seen[url] = true
@@ -821,7 +875,7 @@ func exportSite(outDir string) error {
 		if err := writeStaticPage(outPath, page); err != nil {
 			return fmt.Errorf("render %s: %w", url, err)
 		}
-		log.Printf("wrote %s", outPath)
+		slog.Info("wrote page", "path", outPath)
 	}
 
 	// Copy embedded static assets (images) into the same relative paths.
@@ -852,16 +906,33 @@ func exportSite(outDir string) error {
 		if err := copyAsset(src, dst); err != nil {
 			return fmt.Errorf("copy %s: %w", rel, err)
 		}
-		log.Printf("copied %s", dst)
+		slog.Info("copied asset", "path", dst)
 		return nil
 	})
 }
 
+// printVersion prints the module version and Go toolchain used to build the
+// binary, as recorded by the Go runtime at build time.
+func printVersion() {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		fmt.Println("cortex (unknown version)")
+		return
+	}
+	fmt.Printf("cortex %s (%s)\n", info.Main.Version, info.GoVersion)
+}
+
 func main() {
 	flag.Parse()
+	if *versionFlag {
+		printVersion()
+		return
+	}
+
 	abs, err := filepath.Abs(*rootDir)
 	if err != nil {
-		log.Fatalf("resolve dir: %v", err)
+		slog.Error("resolve dir", "err", err)
+		os.Exit(1)
 	}
 	// Resolve any symlinks in the root itself so isUnderRoot comparisons
 	// against EvalSymlinks'd descendants are consistent.
@@ -870,18 +941,23 @@ func main() {
 	}
 	*rootDir = abs
 	if info, err := os.Stat(*rootDir); err != nil || !info.IsDir() {
-		log.Fatalf("dir not found: %s", *rootDir)
+		slog.Error("dir not found", "dir", *rootDir)
+		os.Exit(1)
 	}
 
 	if *exportDir != "" {
 		if err := exportSite(*exportDir); err != nil {
-			log.Fatalf("export: %v", err)
+			slog.Error("export failed", "err", err)
+			os.Exit(1)
 		}
 		return
 	}
 
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
 	rl := newReloader()
-	go watchTree(context.Background(), *rootDir, rl)
+	go watchTree(ctx, *rootDir, rl)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/_cortex/events", sseHandler(rl))
@@ -894,6 +970,19 @@ func main() {
 		IdleTimeout:       idleConnLimit,
 		// WriteTimeout intentionally unset: SSE connections are long-lived.
 	}
-	log.Printf("cortex: serving %s on http://%s", *rootDir, *addr)
-	log.Fatal(srv.ListenAndServe())
+
+	go func() {
+		<-ctx.Done()
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+		defer cancel()
+		if err := srv.Shutdown(shutdownCtx); err != nil {
+			slog.Error("shutdown", "err", err)
+		}
+	}()
+
+	slog.Info("cortex: serving", "dir", *rootDir, "addr", *addr)
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		slog.Error("server failed", "err", err)
+		os.Exit(1)
+	}
 }

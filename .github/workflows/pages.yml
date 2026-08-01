@@ -22,10 +22,12 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version-file: go.mod
+      - run: test -z "$(gofmt -l .)"
+      - run: go vet ./...
       - run: go test ./...
       - run: go build -o cortex .
       - run: ./cortex -dir doc -export _site
-      - run: echo cortex.wiki > _site/CNAME
+      - run: cp CNAME _site/CNAME
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
