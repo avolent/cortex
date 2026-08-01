@@ -188,10 +188,11 @@ const tmplStr = `<!doctype html>
 <body>
 <nav class="sidebar">{{template "nav" .Nav}}</nav>
 <main><article>{{.Content}}</article></main>
+<script>(()=>{document.querySelectorAll('nav.sidebar details[data-path]').forEach(d=>{const k='cortex:dir:'+d.dataset.path;const v=localStorage.getItem(k);if(v!==null)d.open=v==='1';d.addEventListener('toggle',()=>localStorage.setItem(k,d.open?'1':'0'));});})();</script>
 {{if .Reload}}<script>(()=>{const es=new EventSource('/_cortex/events');es.onmessage=()=>location.reload();es.onerror=()=>{};})();</script>{{end}}
 </body>
 </html>
-{{define "nav"}}{{range .}}{{if .IsDir}}<details open><summary>{{.Title}}</summary>{{template "nav" .Children}}</details>{{else}}<a href="{{.Path}}"{{if .Active}} class="active"{{end}}>{{.Title}}</a>{{end}}{{end}}{{end}}
+{{define "nav"}}{{range .}}{{if .IsDir}}<details open data-path="{{.Path}}"><summary>{{.Title}}</summary>{{template "nav" .Children}}</details>{{else}}<a href="{{.Path}}"{{if .Active}} class="active"{{end}}>{{.Title}}</a>{{end}}{{end}}{{end}}
 `
 
 var tmpl = template.Must(template.New("page").Parse(tmplStr))
@@ -378,6 +379,7 @@ func buildTree(prefix string, files []string, activeURL string) []navItem {
 		}
 		items = append(items, navItem{
 			Title:    name,
+			Path:     "/" + newPrefix,
 			IsDir:    true,
 			Children: buildTree(newPrefix, subdirs[name], activeURL),
 		})
@@ -724,6 +726,7 @@ func watchTree(ctx context.Context, root string, r *reloader) {
 			if ext == ".md" && ev.Op&(fsnotify.Create|fsnotify.Remove|fsnotify.Rename) != 0 {
 				index.invalidate()
 			}
+			slog.Info("live reload triggered", "file", ev.Name, "op", ev.Op)
 			schedule()
 		case err, ok := <-w.Errors:
 			if !ok {

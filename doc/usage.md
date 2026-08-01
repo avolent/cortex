@@ -100,6 +100,10 @@ automatically — no restart needed.
 - Folders are collapsible `<details>` blocks (open by default)
 - `README.md` is pinned to the top of each folder
 - Everything else is alphabetical
+- Collapsed/expanded state per folder is remembered in the browser's
+  `localStorage`, so closing a folder keeps it closed across page loads,
+  live-reloads, and navigation (works in both server mode and `-export`
+  output)
 
 ## Theme
 

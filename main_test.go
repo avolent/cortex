@@ -71,6 +71,57 @@ func TestUrlForFile(t *testing.T) {
 	}
 }
 
+func TestBuildTreeDirPath(t *testing.T) {
+	files := []string{"sub/README.md", "sub/article.md", "sub/nested/page.md"}
+	items := buildTree("", files, "")
+
+	var sub *navItem
+	for i := range items {
+		if items[i].IsDir && items[i].Title == "sub" {
+			sub = &items[i]
+		}
+	}
+	if sub == nil {
+		t.Fatal(`expected a "sub" directory nav item`)
+	}
+	if sub.Path != "/sub" {
+		t.Errorf("sub.Path = %q, want /sub", sub.Path)
+	}
+
+	var nested *navItem
+	for i := range sub.Children {
+		if sub.Children[i].IsDir && sub.Children[i].Title == "nested" {
+			nested = &sub.Children[i]
+		}
+	}
+	if nested == nil {
+		t.Fatal(`expected a nested "nested" directory nav item`)
+	}
+	if nested.Path != "/sub/nested" {
+		t.Errorf("nested.Path = %q, want /sub/nested", nested.Path)
+	}
+}
+
+func TestHandlerSidebarPersistsCollapseState(t *testing.T) {
+	tmp := t.TempDir()
+	writeTree(t, tmp, map[string]string{
+		"README.md":     "# Home\n",
+		"sub/README.md": "# Sub\n",
+	})
+	withRoot(t, tmp, func() {
+		req := httptest.NewRequest("GET", "/", nil)
+		rec := httptest.NewRecorder()
+		handler(rec, req)
+		body := rec.Body.String()
+		if !strings.Contains(body, `data-path="/sub"`) {
+			t.Errorf("sidebar missing data-path attribute for /sub; body:\n%s", body)
+		}
+		if !strings.Contains(body, "cortex:dir:") {
+			t.Errorf("sidebar missing collapse-state persistence script; body:\n%s", body)
+		}
+	})
+}
+
 func TestOutPathForURL(t *testing.T) {
 	cases := []struct{ url, want string }{
 		{"/", filepath.Join("out", "index.html")},
