@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
@@ -27,6 +28,15 @@ func withRoot(t *testing.T, dir string, fn func()) {
 		*rootDir = old
 		index.invalidate()
 	}()
+	fn()
+}
+
+// withIndexNames runs fn with *indexNames temporarily set, then restores it.
+func withIndexNames(t *testing.T, value string, fn func()) {
+	t.Helper()
+	old := *indexNames
+	*indexNames = value
+	defer func() { *indexNames = old }()
 	fn()
 }
 
@@ -276,6 +286,77 @@ func TestResolveMarkdown(t *testing.T) {
 	})
 }
 
+func TestExtraIndexNames(t *testing.T) {
+	withIndexNames(t, "", func() {
+		if got := extraIndexNames(); got != nil {
+			t.Errorf("extraIndexNames() = %v, want nil for empty flag", got)
+		}
+	})
+
+	withIndexNames(t, " index , home.md ,, ", func() {
+		got := extraIndexNames()
+		want := []string{"index", "home"}
+		if len(got) != len(want) {
+			t.Fatalf("extraIndexNames() = %v, want %v", got, want)
+		}
+		for i := range want {
+			if got[i] != want[i] {
+				t.Errorf("extraIndexNames()[%d] = %q, want %q", i, got[i], want[i])
+			}
+		}
+	})
+}
+
+func TestResolveMarkdownIndexOverride(t *testing.T) {
+	tmp := t.TempDir()
+	writeTree(t, tmp, map[string]string{
+		"sub/index.md":   "# Sub Index\n",
+		"sub2/README.md": "# Sub2\n",
+		"sub3/README.md": "# Sub3 Readme\n",
+		"sub3/index.md":  "# Sub3 Index\n",
+	})
+
+	withRoot(t, tmp, func() {
+		withIndexNames(t, "index", func() {
+			if got := resolveMarkdown("/sub"); got != filepath.FromSlash("sub/index.md") {
+				t.Errorf("resolveMarkdown(/sub) = %q, want sub/index.md", got)
+			}
+			// A directory with only a README still resolves via README.
+			if got := resolveMarkdown("/sub2"); got != filepath.FromSlash("sub2/README.md") {
+				t.Errorf("resolveMarkdown(/sub2) = %q, want sub2/README.md", got)
+			}
+			// README takes priority over the -index fallback when both exist.
+			if got := resolveMarkdown("/sub3"); got != filepath.FromSlash("sub3/README.md") {
+				t.Errorf("resolveMarkdown(/sub3) = %q, want sub3/README.md", got)
+			}
+		})
+		// Without the flag set, the index.md-only directory is unreachable at /sub.
+		if got := resolveMarkdown("/sub"); got != "" {
+			t.Errorf("resolveMarkdown(/sub) with no -index flag = %q, want \"\"", got)
+		}
+	})
+}
+
+func TestUrlForFileIndexOverride(t *testing.T) {
+	withIndexNames(t, "index,home", func() {
+		cases := map[string]string{
+			"sub/index.md": "/sub",
+			"sub/home.md":  "/sub",
+			"sub/other.md": "/sub/other",
+			"index.md":     "/",
+		}
+		for in, want := range cases {
+			if got := urlForFile(in); got != want {
+				t.Errorf("urlForFile(%q) = %q, want %q", in, got, want)
+			}
+		}
+	})
+	// Without the flag set, "index.md" is just a regular page.
+	if got := urlForFile("sub/index.md"); got != "/sub/index" {
+		t.Errorf("urlForFile(sub/index.md) with no -index flag = %q, want /sub/index", got)
+	}
+}
+
 func TestHandler(t *testing.T) {
 	tmp := t.TempDir()
 	writeTree(t, tmp, map[string]string{
@@ -318,6 +399,91 @@ func TestHandler(t *testing.T) {
 			})
 		}
 	})
+}
+
+func TestPrintVersion(t *testing.T) {
+	old := os.Stdout
+	r, w, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	os.Stdout = w
+	printVersion()
+	w.Close()
+	os.Stdout = old
+
+	out, err := io.ReadAll(r)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(out), "cortex") {
+		t.Errorf("printVersion() output = %q, want it to contain %q", out, "cortex")
+	}
+}
+
+func TestReloaderSubscribeCap(t *testing.T) {
+	rl := newReloader()
+	chans := make([]chan struct{}, 0, maxSSEClients)
+	for i := range maxSSEClients {
+		ch := rl.subscribe()
+		if ch == nil {
+			t.Fatalf("subscribe %d: got nil before reaching cap %d", i, maxSSEClients)
+		}
+		chans = append(chans, ch)
+	}
+	if ch := rl.subscribe(); ch != nil {
+		t.Errorf("subscribe at cap: got a channel, want nil (cap %d reached)", maxSSEClients)
+	}
+
+	rl.unsubscribe(chans[0])
+	if ch := rl.subscribe(); ch == nil {
+		t.Errorf("subscribe after freeing a slot: got nil, want a channel")
+	}
+}
+
+func TestReloaderBroadcast(t *testing.T) {
+	rl := newReloader()
+	ch := rl.subscribe()
+	if ch == nil {
+		t.Fatal("subscribe returned nil")
+	}
+
+	rl.broadcast()
+
+	select {
+	case <-ch:
+	default:
+		t.Error("broadcast did not reach subscribed channel")
+	}
+}
+
+func TestExportSiteSkipsEscapingAssetSymlink(t *testing.T) {
+	if _, err := os.Stat("/etc/hosts"); err != nil {
+		t.Skip("no /etc/hosts on this platform")
+	}
+	tmp := t.TempDir()
+	src := filepath.Join(tmp, "src")
+	out := filepath.Join(tmp, "out")
+
+	writeTree(t, src, map[string]string{
+		"README.md": "# Home\n",
+	})
+	// Symlinked static asset whose target is outside the served root.
+	if err := os.Symlink("/etc/hosts", filepath.Join(src, "escape.png")); err != nil {
+		t.Fatal(err)
+	}
+
+	var exportErr error
+	withRoot(t, src, func() {
+		exportErr = exportSite(out)
+	})
+	if exportErr != nil {
+		t.Fatalf("exportSite: %v", exportErr)
+	}
+
+	if _, err := os.Stat(filepath.Join(out, "escape.png")); err == nil {
+		t.Errorf("exportSite copied an asset symlink escaping the root")
+	}
 }
 
 func TestExportSite(t *testing.T) {

@@ -16,8 +16,9 @@ their head. No hunting across modules.
 
 `go build` produces a single self-contained executable. No external
 runtime files — no CSS dropped next to the binary, no fonts in a sibling
-folder, no template files. Anything cortex needs at runtime is embedded
-via `//go:embed` and served from memory.
+folder, no template files. Anything cortex needs at runtime is inlined
+directly into `main.go` (the HTML/CSS/JS template is a plain `const`
+string) and served from memory.
 
 The point: `cortex` works after a single download. No setup, no asset
 hunt.

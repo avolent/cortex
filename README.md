@@ -23,6 +23,7 @@ cortex                              # serve current directory on 127.0.0.1:8090
 cortex -dir ~/path/to/repo          # serve another folder
 cortex -dir ~/repo -addr 127.0.0.1:9000  # custom port
 cortex -dir ~/repo -addr :8090      # bind all interfaces (LAN-accessible)
+cortex -dir ~/repo -index index,home  # fall back to index.md/home.md when a folder has no README
 
 cortex -dir ~/notes -export ./out   # render to static HTML, exit
 ```
@@ -37,7 +38,7 @@ only; pass `-addr :8090` to expose on the LAN.
 - `/` serves the root `README.md`.
 - `/path/to/foo` serves `path/to/foo.md`.
 - `/path/to/foo.md` also works, so relative `[link](other.md)` references in your markdown resolve naturally.
-- `/path/to/dir` falls back to `path/to/dir/README.md` if present.
+- `/path/to/dir` falls back to `path/to/dir/README.md` if present, else the first `-index` name that matches (see `-index` flag).
 - Embedded images (`.png .jpg .jpeg .gif .svg .webp .ico`) are served as static assets.
 - Sidebar shows folders as collapsible `<details>` blocks. README is pinned to the top of each folder; everything else is alphabetical.
 - Light + dark theme via `prefers-color-scheme`.
