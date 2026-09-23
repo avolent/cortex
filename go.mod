@@ -4,7 +4,7 @@ go 1.26.2
 
 require (
 	github.com/fsnotify/fsnotify v1.10.1
-	github.com/gomarkdown/markdown v0.0.0-20260921172736-e177decc3c2f
+	github.com/gomarkdown/markdown v0.0.0-20260923180740-94fc73f6b1a3
 )
 
 require golang.org/x/sys v0.13.0 // indirect
